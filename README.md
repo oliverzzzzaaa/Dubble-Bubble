@@ -7,6 +7,7 @@ Dubble Trouble is a bubble trouble shooter game with multiple levels and speeds.
   + Having a single user who can move left, right, up and down ladders, and shoot
   + Having bouncing balls that pop into two upon being shot
   + Having multiple difficulties with faster ball velocity
+  + User dies upon touching a ball. Game ends when user loses all his lives
   
   + Bonus: Snow levels with slippery floors
 
