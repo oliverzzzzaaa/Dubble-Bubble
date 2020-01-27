@@ -16,4 +16,14 @@ Dubble Trouble is a bubble trouble shooter game with multiple levels and speeds.
 
 **Wireframes**
 
-![Wireframe] (./Wireframe.png Wireframe)
+![alt text](https://github.com/oliverzzzzaaa/Dubble-Bubble/blob/master/WireFrame.png)
+
+
+**Timeline**
+
+  + Monday: Basic Canvas with user walking along the floor
+  + Tuesday: User walking up and down ladders and shooting 
+  + Wednesday: Bubbles bouncing and exploding after being shot
+  + Thursday: User lives and dying upon being hit.
+  + Friday: Score
+  + Saturday: CSS
