@@ -16,4 +16,4 @@ Dubble Trouble is a bubble trouble shooter game with multiple levels and speeds.
 
 **Wireframes**
 
-
+![Wireframe] (./Screen Shot 2020-01-27 at 2.03.19 PM.png)
