@@ -27,5 +27,5 @@ Dubble Trouble is a bubble trouble shooter game with multiple levels and speeds.
   + Tuesday: User walking up and down ladders and shooting 
   + Wednesday: Bubbles bouncing and exploding after being shot
   + Thursday: User lives and dying upon being hit.
-  + Friday: Score
+  + Friday: Score and Powerups
   + Saturday: CSS
