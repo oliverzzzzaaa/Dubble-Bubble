@@ -1,0 +1,13 @@
+#game-canvas {
+    width: 1000px;
+    height: 700px;
+    background-color: pink;
+    border: 1px solid blue;
+}
+
+#canvas-div {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
