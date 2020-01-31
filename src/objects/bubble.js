@@ -4,9 +4,7 @@ function Bubble(options) {
     this.pos = options.pos;
     this.vel = options.vel;
     this.radius = options.radius;
-    this.game = options.game;
     this.color = "#B22222";
-    this.maxHeight = options.maxHeight;
 }
 
 Bubble.prototype.draw = function(ctx) {

@@ -107,11 +107,11 @@ Game.prototype.animate = function(time) {
 }
 
 Game.prototype.move = function(timeD) {
-    this.players.forEach(player => {
+    this.map.players.forEach(player => {
         player.move()
         player.bullets.forEach(bullet => bullet.move())
     })
-    this.bubbles.forEach(bubble => bubble.move());
+    this.map.bubbles.forEach(bubble => bubble.move());
     // this.bullets.forEach(bullet => bullet.move());
 }
 
@@ -122,10 +122,40 @@ Game.prototype.drawAll = function() {
         player.draw(this.ctx);       
         player.bullets.forEach(bullet => bullet.draw(this.ctx))
     })
-    this.bubbles.forEach(bubble => bubble.draw(this.ctx))
+    this.map.bubbles.forEach(bubble => bubble.draw(this.ctx))
     this.map.rectangles.forEach(rectangle => rectangle.draw(this.ctx))
     // this.bullets.forEach(bullet => bullet.draw(this.ctx))
     this.checkCollisions();
+}
+
+// this.pos = options.pos;
+//     this.vel = options.vel;
+//     this.radius = options.radius;
+//     this.game = options.game;
+//     this.color = "#B22222";
+//     this.maxHeight = options.maxHeight;
+
+Game.prototype.shouldPop = function(bullet) {
+    for (let i = 0; i < this.map.bubbles.length; i++) {
+        let bubble = this.map.bubbles[i];
+        if (bullet.top <= bubble.pos[1] + bubble.radius && (bullet.pos[0] > bubble.pos[0] - bubble.radius && bullet.pos[0] < bubble.pos[0] + bubble.radius)) {
+            let newBubbles = [new Bubble({
+                pos: bubble.pos.slice(),
+                vel: bubble.vel,
+                radius: (bubble.radius / 2)
+            }), new Bubble({
+                pos: bubble.pos.slice(),
+                vel: [(bubble.vel[0] * -1), bubble.vel[1]],
+                radius: (bubble.radius / 2)
+            })]
+            //two new bubbles in opposite X directions, half radius
+            if (bubble.radius > 10) {
+                this.map.bubbles = this.map.bubbles.concat(newBubbles)
+            }
+                this.map.bubbles.splice(i, 1);
+            return true
+        }
+    }
 }
 
 Game.prototype.checkCollisions = function() {
@@ -136,8 +166,9 @@ Game.prototype.checkCollisions = function() {
         while (i < player.bullets.length) {
             if (player.bullets[i].top < 0) {
                 player.clearBullet()
-            } else if () {
-                
+            } else if (this.shouldPop(player.bullets[i])) {
+                player.clearBullet()
+                i++;  
             } else {
                 i++;
             }
@@ -146,9 +177,10 @@ Game.prototype.checkCollisions = function() {
     })
 
     this.map.bubbles.forEach(bubble => {
-        console.log(bubble.pos[1] + bubble.radius)
+        if (bubble.pos === undefined) {
+            console.log(this.map.bubbles)
+        }
         if (bubble.pos[1] + bubble.radius >= this.floor) {
-            console.log('bounce!')
             bubble.vel[1] = bubble.vel[1] * -1;
         } else if (bubble.pos[0] + bubble.radius >= this.DIM_X) {
             bubble.vel[0] = bubble.vel[0] * -1;
@@ -162,10 +194,37 @@ Game.prototype.checkCollisions = function() {
 
 }
 
+
+
+// function onkeydown(e) {
+//     if (!hit){
+//         if (e.key == ' ' || e.key == 'Enter') { downKeys.fire = true };
+//         if (e.key == 'w' || e.key == 'ArrowUp') { downKeys.up = true };
+//         if (e.key == 's' || e.key == 'ArrowDown') { downKeys.down = true };
+//         if (e.key == 'a' || e.key == 'ArrowLeft') { downKeys.left = true };
+//         if (e.key == 'd' || e.key == 'ArrowRight') { downKeys.right = true };
+//     }
+// };
+// function onkeyup(e){
+//     if (e.key == ' ' || e.key == 'Enter') {downKeys.fire = false};
+//     if (e.key == 'w' || e.key == 'ArrowUp') {downKeys.up = false};
+//     if (e.key == 's' || e.key == 'ArrowDown') {downKeys.down = false};
+//     if (e.key == 'a' || e.key == 'ArrowLeft') {downKeys.left = false};
+//     if (e.key == 'd' || e.key == 'ArrowRight') {downKeys.right = false};
+// };
+
+//     if(hasListener === false){
+//         document.addEventListener('keydown', onkeydown);
+//         document.addEventListener('keyup', onkeyup);
+//         hasListener = true;
+//     }
+
 module.exports = Game;
 
 
 
 // "Bullet has static X, once bubble passes through the X"
-// "If bubble pos[1] + radius >= top && "
+// "If bullet.top <= bubble.pos[1] + radius"
+// if (bullet.top <= bubble.pos[1] + radius && (bullet.pos[0] > bubble.pos[0] - radius && bullet.pos[0] < bubble.pos[0] + radius))
+
   
