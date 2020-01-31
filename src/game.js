@@ -131,15 +131,18 @@ Game.prototype.drawAll = function() {
 Game.prototype.checkCollisions = function() {
 
     //clearing bullets at top
-    this.players.forEach(player => {
+    this.map.players.forEach(player => {
         let i = 0;
         while (i < player.bullets.length) {
             if (player.bullets[i].top < 0) {
                 player.clearBullet()
+            } else if () {
+                
             } else {
                 i++;
             }
         }
+
     })
 
     this.map.bubbles.forEach(bubble => {
@@ -156,9 +159,13 @@ Game.prototype.checkCollisions = function() {
         }
     })
 
-    
 
 }
 
 module.exports = Game;
+
+
+
+// "Bullet has static X, once bubble passes through the X"
+// "If bubble pos[1] + radius >= top && "
   
