@@ -2,17 +2,36 @@ const Bubble = require("./objects/bubble")
 const Player = require('./objects/player')
 const LevelReducer = require('./level_reducer')
 
-function Game(ctx) {
+function Game(ctx, width, height) {
     this.bubbles = [];
     this.bullets = [];
     this.players = [];
-    this.level = 1;
+    this.level = 2;
     this.rectangles = [];
     this.map = LevelReducer(this.level);
-    const DIM_X = 900;
-    const DIM_Y = 600;
-    const BG_COLOR = "#FFFFF";
+    this.DIM_X = width;
+    this.DIM_Y = height;
+    this.BG_COLOR = "#FFFFF";
     this.ctx = ctx
+}
+
+Game.MOVES = {
+    w: [0, -15],
+    a: [-15, 0],
+    s: [0, 15],
+    d: [15, 0]
+};
+
+
+Game.prototype.bindKeyHandlers = function() {
+    const player = this.players[0]
+    Object.keys(Game.MOVES).forEach(function(k) {
+        const move = Game.MOVES[k];
+        key(k, function () {
+            player.increaseVel(move)
+        })
+    });
+    // key("space", function () { player.shoot(); });
 }
 
 Game.prototype.addBubble = function(options) {
@@ -28,13 +47,13 @@ Game.prototype.draw = function() {
     ctx.rect(20, 20, 150, 100);
     this.ctx.strokeStyle = 'purple';
     ctx.stroke();
-    console.log('purple')
     this.bubbles.forEach(function(bubble) {
       bubble.draw(ctx);
     });
     this.players.forEach(function(player) {
         player.draw(ctx)
     })
+    this.bullets.forEach(bullet => bullet.draw(ctx))
 };
 
 Game.prototype.move = function() {
@@ -64,6 +83,9 @@ Game.prototype.step = function(delta) {
 Game.prototype.start = function() {
     this.lastTime = 0;
     this.map = new (LevelReducer(this.level))
+    this.players = this.map.players;
+    this.bindKeyHandlers();
+    this.bubbles = this.map.bubbles;
     // this.ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
     requestAnimationFrame(this.animate.bind(this))
 }
@@ -76,13 +98,16 @@ Game.prototype.animate = function(time) {
 }
 
 Game.prototype.move = function(timeD) {
-    this.map.players.forEach(player => {
-        
+    this.players.forEach(player => {
+        player.move()
     })
+    this.bubbles.forEach(bubble => bubble.move())
+    this.bullets.forEach(bullet => bullet.move())
 }
 
 
 Game.prototype.drawAll = function() {
+    this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
     this.map.players.forEach(player => {
         player.draw(this.ctx);       
     })

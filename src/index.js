@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", e => {
     // console.log(canvas.parentElement.clientWidth)
     // console.log(canvas.parentElement.clientHeight)
     const ctx = canvas.getContext('2d');
-    const game = new Game(ctx);
-    let a = new GameView(game, ctx)
-    a.start();
+    const game = new Game(ctx, canvas.width, canvas.height);
+    // let a = new GameView(game, ctx)
+    game.start();
 })
