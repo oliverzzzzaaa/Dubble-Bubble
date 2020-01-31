@@ -12,7 +12,8 @@ function Game(ctx, width, height) {
     this.DIM_X = width;
     this.DIM_Y = height;
     this.BG_COLOR = "#FFFFF";
-    this.ctx = ctx
+    this.ctx = ctx;
+    this.floor = 520;
 }
 
 Game.MOVES = {
@@ -141,7 +142,22 @@ Game.prototype.checkCollisions = function() {
         }
     })
 
+    this.map.bubbles.forEach(bubble => {
+        console.log(bubble.pos[1] + bubble.radius)
+        if (bubble.pos[1] + bubble.radius >= this.floor) {
+            console.log('bounce!')
+            bubble.vel[1] = bubble.vel[1] * -1;
+        } else if (bubble.pos[0] + bubble.radius >= this.DIM_X) {
+            bubble.vel[0] = bubble.vel[0] * -1;
+        } else if (bubble.pos[1] - bubble.radius <= 0) {
+            bubble.vel[1] = bubble.vel[1] * -1;
+        } else if (bubble.pos[0] - bubble.radius <= 0) {
+            bubble.vel[0] = bubble.vel[0] * -1;
+        }
+    })
+
     
+
 }
 
 module.exports = Game;
