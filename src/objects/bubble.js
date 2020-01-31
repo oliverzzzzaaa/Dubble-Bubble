@@ -1,3 +1,5 @@
+
+
 function Bubble(options) {
     this.pos = options.pos;
     this.vel = options.vel;
@@ -10,6 +12,7 @@ function Bubble(options) {
 Bubble.prototype.draw = function(ctx) {
     ctx.fillStyle = this.color;
     ctx.beginPath();
+    console.log(this)
     ctx.arc(
         this.pos[0], this.pos[1], this.radius, 0, 2 * Math.PI, true 
     )

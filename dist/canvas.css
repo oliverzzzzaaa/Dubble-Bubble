@@ -1,7 +1,7 @@
 #game-canvas {
     width: 1000px;
     height: 700px;
-    background-color: pink;
+    /* background-color: pink; */
     border: 1px solid blue;
 }
 

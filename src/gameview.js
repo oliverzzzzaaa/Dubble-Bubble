@@ -1,7 +1,6 @@
 function GameView(game, ctx) {
     this.ctx = ctx;
     this.game = game;
-    this.player = this.game.addPlayer();
 }
 
 GameView.MOVES = {
@@ -23,13 +22,27 @@ GameView.prototype.bindKeyHandlers = function bindKeyHandlers() {
 
 GameView.prototype.start = function() {
     this.bindKeyHandlers()
-    console.log("started")
-    console.log(this.player)
+    this.player = this.game.addPlayer();
+    console.log(this.game)
+    this.game.start();
+}
+
+GameView.prototype.playRound = function() {
     let interval = setInterval(() => {
         this.game.draw(this.ctx)
     }, 10)
-
 }
+
+GameView.prototype.animate = function animate(time) {
+    const timeDelta = time - this.lastTime;
+  
+    this.game.step(timeDelta);
+    this.game.draw(this.ctx);
+    this.lastTime = time;
+  
+    // every call to animate requests causes another call to animate
+    requestAnimationFrame(this.animate.bind(this));
+};
 
 
 module.exports = GameView;

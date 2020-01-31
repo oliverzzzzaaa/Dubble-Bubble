@@ -3,6 +3,8 @@ function Player(options) {
     this.pos = options.pos;
     this.vel = options.vel;
     this.bullets = [];
+    this.radius = 20;
+    this.color = '#6495ED'
 }
 
 Player.prototype.move = function(dir) {
@@ -13,9 +15,11 @@ Player.prototype.move = function(dir) {
 }
 
 
+
 Player.prototype.draw = function(ctx) {
-    ctx.fillStyle = "#696969";
+    ctx.fillStyle = this.color;
     ctx.beginPath();
+    console.log(this)
     ctx.arc(
         this.pos[0], this.pos[1], this.radius, 0, 2 * Math.PI, true 
     )
