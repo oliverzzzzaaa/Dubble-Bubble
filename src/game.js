@@ -62,14 +62,41 @@ Game.prototype.step = function(delta) {
   };
 
 Game.prototype.start = function() {
+    this.lastTime = 0;
     this.map = new (LevelReducer(this.level))
-    this.ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
+    // this.ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
+    requestAnimationFrame(this.animate.bind(this))
+}
+
+Game.prototype.animate = function(time) {
+    const timeD = time - this.lastTime;
+    this.move(timeD);
+    this.drawAll();
+    requestAnimationFrame(this.animate.bind(this));
+}
+
+Game.prototype.move = function(timeD) {
+    this.map.players.forEach(player => {
+        
+    })
+}
+
+
+Game.prototype.drawAll = function() {
     this.map.players.forEach(player => {
         player.draw(this.ctx);       
     })
     this.map.bubbles.forEach(bubble => bubble.draw(this.ctx))
     this.map.rectangles.forEach(rectangle => rectangle.draw(this.ctx))
-    console.log('done')
+    this.checkCollisions();
+}
+
+Game.prototype.checkCollisions = function() {
+    // this.bullets.forEach(bullet => {
+    //     this.bubbles.forEach(bubble => {
+
+    //     })
+    // })
 }
 
 module.exports = Game;
