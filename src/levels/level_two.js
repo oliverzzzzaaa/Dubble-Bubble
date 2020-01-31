@@ -8,8 +8,7 @@ function levelTwo(game) {
         (new Bubble({
             pos: [300,100],
             vel: [5,5],
-            radius: 80,
-            game: game
+            radius: 80
         }))
     ]
     this.rectangles = [new Rectangle({

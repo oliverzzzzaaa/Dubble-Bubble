@@ -6,7 +6,7 @@ function Game(ctx, width, height) {
     this.bubbles = [];
     this.bullets = [];
     this.players = [];
-    this.level = 2;
+    this.level = 1;
     this.rectangles = [];
     this.map = LevelReducer(this.level);
     this.DIM_X = width;
@@ -95,7 +95,6 @@ Game.prototype.start = function() {
     this.players = this.map.players;
     this.bindKeyHandlers();
     this.bubbles = this.map.bubbles;
-    // this.ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
     requestAnimationFrame(this.animate.bind(this))
 }
 
@@ -103,6 +102,14 @@ Game.prototype.animate = function(time) {
     const timeD = time - this.lastTime;
     this.move(timeD);
     this.drawAll();
+    if (this.map.bubbles.length < 1) {
+        console.log("DONE")
+        this.level += 1;
+        this.map = new (LevelReducer(this.level))
+        this.players = this.map.players;
+        this.bindKeyHandlers();
+        this.bubbles = this.map.bubbles;
+    }
     requestAnimationFrame(this.animate.bind(this));
 }
 
@@ -122,18 +129,12 @@ Game.prototype.drawAll = function() {
         player.draw(this.ctx);       
         player.bullets.forEach(bullet => bullet.draw(this.ctx))
     })
+    console.log(this.map)
     this.map.bubbles.forEach(bubble => bubble.draw(this.ctx))
     this.map.rectangles.forEach(rectangle => rectangle.draw(this.ctx))
     // this.bullets.forEach(bullet => bullet.draw(this.ctx))
     this.checkCollisions();
 }
-
-// this.pos = options.pos;
-//     this.vel = options.vel;
-//     this.radius = options.radius;
-//     this.game = options.game;
-//     this.color = "#B22222";
-//     this.maxHeight = options.maxHeight;
 
 Game.prototype.shouldPop = function(bullet) {
     for (let i = 0; i < this.map.bubbles.length; i++) {
@@ -177,16 +178,16 @@ Game.prototype.checkCollisions = function() {
     })
 
     this.map.bubbles.forEach(bubble => {
-        if (bubble.pos === undefined) {
-            console.log(this.map.bubbles)
-        }
         if (bubble.pos[1] + bubble.radius >= this.floor) {
             bubble.vel[1] = bubble.vel[1] * -1;
-        } else if (bubble.pos[0] + bubble.radius >= this.DIM_X) {
+        }
+        if (bubble.pos[0] + bubble.radius >= this.DIM_X) {
             bubble.vel[0] = bubble.vel[0] * -1;
-        } else if (bubble.pos[1] - bubble.radius <= 0) {
+        }
+        if (bubble.pos[1] - bubble.radius <= 0) {
             bubble.vel[1] = bubble.vel[1] * -1;
-        } else if (bubble.pos[0] - bubble.radius <= 0) {
+        }
+        if (bubble.pos[0] - bubble.radius <= 0) {
             bubble.vel[0] = bubble.vel[0] * -1;
         }
     })
@@ -197,27 +198,23 @@ Game.prototype.checkCollisions = function() {
 
 
 // function onkeydown(e) {
-//     if (!hit){
-//         if (e.key == ' ' || e.key == 'Enter') { downKeys.fire = true };
-//         if (e.key == 'w' || e.key == 'ArrowUp') { downKeys.up = true };
-//         if (e.key == 's' || e.key == 'ArrowDown') { downKeys.down = true };
-//         if (e.key == 'a' || e.key == 'ArrowLeft') { downKeys.left = true };
-//         if (e.key == 'd' || e.key == 'ArrowRight') { downKeys.right = true };
-//     }
+//         // if (e.key == ' ' || e.key == 'Enter') { downKeys.fire = true };
+//         // if (e.key == 'w' || e.key == 'ArrowUp') { downKeys.up = true };
+//         // if (e.key == 's' || e.key == 'ArrowDown') { downKeys.down = true };
+//         if (e.key == 'a' || e.key == 'ArrowLeft') { this.map.players[0].vel = [-10, 0] };
+//         if (e.key == 'd' || e.key == 'ArrowRight') { this.map.players[0].vel = [10, 0] };
 // };
 // function onkeyup(e){
-//     if (e.key == ' ' || e.key == 'Enter') {downKeys.fire = false};
-//     if (e.key == 'w' || e.key == 'ArrowUp') {downKeys.up = false};
-//     if (e.key == 's' || e.key == 'ArrowDown') {downKeys.down = false};
-//     if (e.key == 'a' || e.key == 'ArrowLeft') {downKeys.left = false};
-//     if (e.key == 'd' || e.key == 'ArrowRight') {downKeys.right = false};
+//     // if (e.key == ' ' || e.key == 'Enter') {downKeys.fire = false};
+//     // if (e.key == 'w' || e.key == 'ArrowUp') {downKeys.up = false};
+//     // if (e.key == 's' || e.key == 'ArrowDown') {downKeys.down = false};
+//     if (e.key == 'a' || e.key == 'ArrowLeft') { this.map.players[0].vel = [0, 0] };
+//     if (e.key == 'd' || e.key == 'ArrowRight') { this.map.players[0].vel = [0, 0] };
 // };
 
-//     if(hasListener === false){
-//         document.addEventListener('keydown', onkeydown);
-//         document.addEventListener('keyup', onkeyup);
-//         hasListener = true;
-//     }
+// document.addEventListener('keydown', onkeydown);
+// document.addEventListener('keyup', onkeyup);
+// // hasListener = true;
 
 module.exports = Game;
 

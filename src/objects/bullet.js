@@ -1,11 +1,11 @@
 function Bullet(ctx, pos) {
     this.ctx = ctx;
     this.vel = [0,-10];
-    this.pos = pos;
+    this.pos = [pos[0], pos[1]+20];
     this.color = '#FFF0F5'
     this.width = 5;
-    this.height = 100;
-    this.top = 0;
+    this.height = -100;
+    this.top = this.pos;
 }
 
 Bullet.prototype.move = function() {
