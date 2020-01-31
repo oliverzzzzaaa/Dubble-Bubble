@@ -31,7 +31,15 @@ Game.prototype.bindKeyHandlers = function() {
             player.increaseVel(move)
         })
     });
-    // key("space", function () { player.shoot(); });
+    key("space", () => { 
+        if (player.canShoot()) {
+            console.log('pew');
+            this.bullets.push(player.shoot(this.ctx));
+        } else {
+            console.log("too many")
+            console.log(player.bullets)
+        }
+    });
 }
 
 Game.prototype.addBubble = function(options) {
@@ -52,8 +60,8 @@ Game.prototype.draw = function() {
     });
     this.players.forEach(function(player) {
         player.draw(ctx)
+        player.bullets.forEach(bullet => bullet.draw(ctx))
     })
-    this.bullets.forEach(bullet => bullet.draw(ctx))
 };
 
 Game.prototype.move = function() {
@@ -69,11 +77,11 @@ Game.prototype.addPlayer = function() {
     return this.players[0];
 }
 
-Game.prototype.moveObjects = function(delta) {
-    const allMovingObj = [];
-    allMovingObj = allMovingObj.concat(this.bubbles, this.bullets, this.players)
-    allMovingObj.forEach(obj => obj.move(this.ctx))
-  };
+// Game.prototype.moveObjects = function(delta) {
+//     const allMovingObj = [];
+//     allMovingObj = allMovingObj.concat(this.bubbles, this.bullets, this.players)
+//     allMovingObj.forEach(obj => obj.move(this.ctx))
+//   };
 
 Game.prototype.step = function(delta) {
     this.moveObjects(delta);
@@ -100,28 +108,40 @@ Game.prototype.animate = function(time) {
 Game.prototype.move = function(timeD) {
     this.players.forEach(player => {
         player.move()
+        player.bullets.forEach(bullet => bullet.move())
     })
-    this.bubbles.forEach(bubble => bubble.move())
-    this.bullets.forEach(bullet => bullet.move())
+    this.bubbles.forEach(bubble => bubble.move());
+    // this.bullets.forEach(bullet => bullet.move());
 }
 
 
 Game.prototype.drawAll = function() {
     this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
-    this.map.players.forEach(player => {
+    this.players.forEach(player => {
         player.draw(this.ctx);       
+        player.bullets.forEach(bullet => bullet.draw(this.ctx))
     })
-    this.map.bubbles.forEach(bubble => bubble.draw(this.ctx))
+    this.bubbles.forEach(bubble => bubble.draw(this.ctx))
     this.map.rectangles.forEach(rectangle => rectangle.draw(this.ctx))
+    // this.bullets.forEach(bullet => bullet.draw(this.ctx))
     this.checkCollisions();
 }
 
 Game.prototype.checkCollisions = function() {
-    // this.bullets.forEach(bullet => {
-    //     this.bubbles.forEach(bubble => {
 
-    //     })
-    // })
+    //clearing bullets at top
+    this.players.forEach(player => {
+        let i = 0;
+        while (i < player.bullets.length) {
+            if (player.bullets[i].top < 0) {
+                player.clearBullet()
+            } else {
+                i++;
+            }
+        }
+    })
+
+    
 }
 
 module.exports = Game;

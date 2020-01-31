@@ -33,10 +33,21 @@ Player.prototype.draw = function(ctx) {
     ctx.fill();
 }
 
-Player.prototype.shoot = function() {
+Player.prototype.canShoot = function() {
+    return (this.bullets.length < this.maxBullets);
+}
+
+Player.prototype.shoot = function(ctx) {
     if (this.bullets.length < this.maxBullets) {
-        let bullet = new Bullet(this.pos);
+        let bullet = new Bullet(ctx, this.pos.slice());
+        this.bullets.push(bullet)
+        return bullet;
     }
+}
+
+Player.prototype.clearBullet = function(i) {
+    this.bullets.splice(i, 1);
+    console.log('clear')
 }
 
 module.exports = Player;
