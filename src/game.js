@@ -158,6 +158,16 @@ Game.prototype.checkCollisions = function() {
     //     })
     // })
 
+    this.map.bubbles.forEach(bubble => {
+        this.map.players.forEach(player => {
+            let dX = Math.abs(bubble.pos[0] - player.pos[0])
+            let dY = Math.abs(bubble.pos[1] - player.pos[1])
+            if (dX * dX + dY * dY <= (player.radius + bubble.radius) * (player.radius + bubble.radius)) {
+                alert("You lose!")
+            }
+        })
+    })
+
 }
 
 Game.prototype.onkeydown = function(e) {
