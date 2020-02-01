@@ -192,7 +192,7 @@ eval("\n\nfunction Bubble(options) {\n    this.pos = options.pos;\n    this.vel 
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("function Bullet(ctx, pos) {\n    this.ctx = ctx;\n    this.vel = [0,-2];\n    this.pos = [pos[0], pos[1]+20];\n    this.color = '#FFF0F5'\n    this.width = 5;\n    this.height = -100;\n    this.top = this.pos;\n}\n\nBullet.prototype.move = function() {\n    this.height += -15;\n    this.top = this.pos[1] + this.height;\n}\n\nBullet.prototype.draw = function(ctx) {\n    ctx.fillStyle = this.color;\n    ctx.fillRect(this.pos[0], this.pos[1], this.width, this.height)\n}\n\nmodule.exports = Bullet;\n\n//# sourceURL=webpack:///./src/objects/bullet.js?");
+eval("function Bullet(ctx, pos) {\n    this.ctx = ctx;\n    this.vel = [0,-2];\n    this.pos = [pos[0], pos[1]+20];\n    this.color = '#FFF0F5'\n    this.width = 1;\n    this.height = -100;\n    this.top = this.pos;\n}\n\nBullet.prototype.move = function() {\n    this.height += -15;\n    this.top = this.pos[1] + this.height;\n}\n\nBullet.prototype.draw = function(ctx) {\n    ctx.fillStyle = this.color;\n    ctx.fillRect(this.pos[0], this.pos[1], this.width, this.height)\n}\n\nmodule.exports = Bullet;\n\n//# sourceURL=webpack:///./src/objects/bullet.js?");
 
 /***/ }),
 

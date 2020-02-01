@@ -3,7 +3,7 @@ function Bullet(ctx, pos) {
     this.vel = [0,-2];
     this.pos = [pos[0], pos[1]+20];
     this.color = '#FFF0F5'
-    this.width = 5;
+    this.width = 1;
     this.height = -100;
     this.top = this.pos;
 }

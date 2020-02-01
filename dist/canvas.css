@@ -3,6 +3,7 @@
     height: 700px;
     /* background-color: pink; */
     border: 1px solid blue;
+    background-image: url('../jeremy-thomas-E0AHdsENmDg-unsplash.jpg')
 }
 
 #canvas-div {
@@ -10,4 +11,9 @@
     width: 100%;
     display: flex;
     justify-content: center;
+    
+}
+
+#main-body {
+    background-color: black;
 }
