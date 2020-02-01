@@ -1,6 +1,7 @@
 const Bubble = require("./objects/bubble")
 const Player = require('./objects/player')
 const LevelReducer = require('./level_reducer')
+const isCollideRectangle = require("./collision")
 
 function Game(ctx, width, height) {
     this.bubbles = [];
@@ -176,7 +177,7 @@ Game.prototype.checkCollisions = function() {
         }
 
     })
-
+    //bubbles bouncing
     this.map.bubbles.forEach(bubble => {
         if (bubble.pos[1] + bubble.radius >= this.floor) {
             bubble.vel[1] = bubble.vel[1] * -1;
@@ -190,8 +191,14 @@ Game.prototype.checkCollisions = function() {
         if (bubble.pos[0] - bubble.radius <= 0) {
             bubble.vel[0] = bubble.vel[0] * -1;
         }
+        
     })
 
+    // this.map.bubbles.forEach(bubble => {
+    //     this.map.rectangles.forEach(rectangle => {
+    //         isCollideRectangle(bubble, rectangle)
+    //     })
+    // })
 
 }
 
@@ -224,4 +231,6 @@ module.exports = Game;
 // "If bullet.top <= bubble.pos[1] + radius"
 // if (bullet.top <= bubble.pos[1] + radius && (bullet.pos[0] > bubble.pos[0] - radius && bullet.pos[0] < bubble.pos[0] + radius))
 
-  
+// bullet.top <= bubble.pos[1] + bubble.radius && (bullet.pos[0] > bubble.pos[0] - bubble.radius && bullet.pos[0] < bubble.pos[0] + bubble.radius)
+// rectangle.pos <=
+// rectangle.pos <= bubble.pos[1] + bubble.radius && 

@@ -15,10 +15,16 @@ function levelThree(game) {
             radius: 40,
         })
     ]
+    // this.rectangles = [ new Rectangle({
+    //     pos: [300,300],
+    //     vel: [0,0],
+    //     size: [80, 10],
+    //     game: game
+    // })];
     this.rectangles = [new Rectangle({
         pos: [0, 520],
         vel: [0,0],
-        size: [1000, 10],
+        size: [1000, 2],
         game: game
     }), new Rectangle({
         pos: [300,300],

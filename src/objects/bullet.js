@@ -1,6 +1,6 @@
 function Bullet(ctx, pos) {
     this.ctx = ctx;
-    this.vel = [0,-10];
+    this.vel = [0,-2];
     this.pos = [pos[0], pos[1]+20];
     this.color = '#FFF0F5'
     this.width = 5;
