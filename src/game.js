@@ -44,57 +44,18 @@ Game.prototype.bindKeyHandlers = function() {
     });
 }
 
-Game.prototype.addBubble = function(options) {
-    let newBubble = new Bubble(options);
-    this.bubbles.push(newBubble)
-}
-
-Game.prototype.draw = function() {
-    ctx.clearRect(0, 0, Game.DIM_X, Game.DIM_Y);
-    ctx.fillStyle = Game.BG_COLOR;
-    ctx.fillRect(0, 0, Game.DIM_X, Game.DIM_Y);
-    ctx.beginPath();
-    ctx.rect(20, 20, 150, 100);
-    this.ctx.strokeStyle = 'purple';
-    ctx.stroke();
-    this.bubbles.forEach(function(bubble) {
-      bubble.draw(ctx);
-    });
-    this.players.forEach(function(player) {
-        player.draw(ctx)
-        player.bullets.forEach(bullet => bullet.draw(ctx))
-    })
-};
-
 Game.prototype.move = function() {
     this.bubbles.move()
 }
 
-Game.prototype.addPlayer = function() {
-    let player1 = new Player({
-        pos: [500,500],
-        vel: [0,0]
-    })
-    this.players.push(player1)
-    return this.players[0];
-}
-
-// Game.prototype.moveObjects = function(delta) {
-//     const allMovingObj = [];
-//     allMovingObj = allMovingObj.concat(this.bubbles, this.bullets, this.players)
-//     allMovingObj.forEach(obj => obj.move(this.ctx))
-//   };
-
-Game.prototype.step = function(delta) {
-    this.moveObjects(delta);
-    // this.checkCollisions();
-  };
 
 Game.prototype.start = function() {
+    document.addEventListener('keydown', this.onkeydown.bind(this));
+    document.addEventListener('keyup', this.onkeyup.bind(this));
     this.lastTime = 0;
     this.map = new (LevelReducer(this.level))
     this.players = this.map.players;
-    this.bindKeyHandlers();
+    // this.bindKeyHandlers();
     this.bubbles = this.map.bubbles;
     requestAnimationFrame(this.animate.bind(this))
 }
@@ -120,7 +81,6 @@ Game.prototype.move = function(timeD) {
         player.bullets.forEach(bullet => bullet.move())
     })
     this.map.bubbles.forEach(bubble => bubble.move());
-    // this.bullets.forEach(bullet => bullet.move());
 }
 
 
@@ -130,10 +90,8 @@ Game.prototype.drawAll = function() {
         player.draw(this.ctx);       
         player.bullets.forEach(bullet => bullet.draw(this.ctx))
     })
-    console.log(this.map)
     this.map.bubbles.forEach(bubble => bubble.draw(this.ctx))
     this.map.rectangles.forEach(rectangle => rectangle.draw(this.ctx))
-    // this.bullets.forEach(bullet => bullet.draw(this.ctx))
     this.checkCollisions();
 }
 
@@ -202,35 +160,32 @@ Game.prototype.checkCollisions = function() {
 
 }
 
+Game.prototype.onkeydown = function(e) {
+    if (e.key == ' ' || e.key == 'Enter') { 
+        let player = this.map.players[0];
+        if (player.canShoot()) {
+            this.bullets.push(player.shoot(this.ctx));
+        } else {
+            console.log("too many")
+            console.log(player.bullets)
+        }
+     };
+    // if (e.key == 'w' || e.key == 'ArrowUp') { downKeys.up = true };
+    // if (e.key == 's' || e.key == 'ArrowDown') { downKeys.down = true };
+    if (e.key == 'a' || e.key == 'ArrowLeft') { 
+        this.map.players[0].vel = [-10, 0] };
+    if (e.key == 'd' || e.key == 'ArrowRight') { this.map.players[0].vel = [10, 0] };
+}
+
+Game.prototype.onkeyup = function(e) {
+    // if (e.key == ' ' || e.key == 'Enter') {downKeys.fire = false};
+    // if (e.key == 'w' || e.key == 'ArrowUp') {downKeys.up = false};
+    // if (e.key == 's' || e.key == 'ArrowDown') {downKeys.down = false};
+    if (e.key == 'a' || e.key == 'ArrowLeft') { this.map.players[0].vel = [0, 0] };
+    if (e.key == 'd' || e.key == 'ArrowRight') { this.map.players[0].vel = [0, 0] };
+}
 
 
-// function onkeydown(e) {
-//         // if (e.key == ' ' || e.key == 'Enter') { downKeys.fire = true };
-//         // if (e.key == 'w' || e.key == 'ArrowUp') { downKeys.up = true };
-//         // if (e.key == 's' || e.key == 'ArrowDown') { downKeys.down = true };
-//         if (e.key == 'a' || e.key == 'ArrowLeft') { this.map.players[0].vel = [-10, 0] };
-//         if (e.key == 'd' || e.key == 'ArrowRight') { this.map.players[0].vel = [10, 0] };
-// };
-// function onkeyup(e){
-//     // if (e.key == ' ' || e.key == 'Enter') {downKeys.fire = false};
-//     // if (e.key == 'w' || e.key == 'ArrowUp') {downKeys.up = false};
-//     // if (e.key == 's' || e.key == 'ArrowDown') {downKeys.down = false};
-//     if (e.key == 'a' || e.key == 'ArrowLeft') { this.map.players[0].vel = [0, 0] };
-//     if (e.key == 'd' || e.key == 'ArrowRight') { this.map.players[0].vel = [0, 0] };
-// };
-
-// document.addEventListener('keydown', onkeydown);
-// document.addEventListener('keyup', onkeyup);
 // // hasListener = true;
 
 module.exports = Game;
-
-
-
-// "Bullet has static X, once bubble passes through the X"
-// "If bullet.top <= bubble.pos[1] + radius"
-// if (bullet.top <= bubble.pos[1] + radius && (bullet.pos[0] > bubble.pos[0] - radius && bullet.pos[0] < bubble.pos[0] + radius))
-
-// bullet.top <= bubble.pos[1] + bubble.radius && (bullet.pos[0] > bubble.pos[0] - bubble.radius && bullet.pos[0] < bubble.pos[0] + bubble.radius)
-// rectangle.pos <=
-// rectangle.pos <= bubble.pos[1] + bubble.radius && 

@@ -12,8 +12,13 @@ function Player(options) {
 Player.prototype.move = function() {
     let newPos = this.pos;
     newPos[0] += this.vel[0];
+    if (newPos[0] > 980) {
+        newPos[0] = 980;
+    } else if (newPos[0] < 20){
+        newPos[0] = 20;
+    }
     newPos[1] += this.vel[1];
-    this.vel = [0,0];
+    // this.vel = [0,0];
     this.pos = newPos;
     return newPos;
 }
