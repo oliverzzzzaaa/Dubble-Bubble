@@ -7,9 +7,9 @@ function levelOne(game) {
     this.players = [new Player({pos: [500,500], vel: [0,0]})]
     this.bubbles = [
         (new Bubble({
-            pos: [500,100],
-            vel: [5,5],
-            radius: 80,
+            pos: [600,200],
+            vel: [2,2],
+            radius: 50,
             game: game
         }))
     ]

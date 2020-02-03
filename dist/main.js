@@ -148,7 +148,7 @@ eval("const levelOne = __webpack_require__(/*! ./levels/level_one */ \"./src/lev
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("\nconst Player = __webpack_require__(/*! ../objects/player */ \"./src/objects/player.js\")\nconst Bubble = __webpack_require__(/*! ../objects/bubble */ \"./src/objects/bubble.js\")\nconst Rectangle = __webpack_require__(/*! ../objects/rectangle */ \"./src/objects/rectangle.js\")\n\nfunction levelOne(game) {\n    this.players = [new Player({pos: [500,500], vel: [0,0]})]\n    this.bubbles = [\n        (new Bubble({\n            pos: [500,100],\n            vel: [5,5],\n            radius: 80,\n            game: game\n        }))\n    ]\n    this.rectangles = [new Rectangle({\n        pos: [0, 520],\n        vel: [0,0],\n        size: [1000, 2],\n        game: game\n    })];\n}\n\nmodule.exports = levelOne\n\n//# sourceURL=webpack:///./src/levels/level_one.js?");
+eval("\nconst Player = __webpack_require__(/*! ../objects/player */ \"./src/objects/player.js\")\nconst Bubble = __webpack_require__(/*! ../objects/bubble */ \"./src/objects/bubble.js\")\nconst Rectangle = __webpack_require__(/*! ../objects/rectangle */ \"./src/objects/rectangle.js\")\n\nfunction levelOne(game) {\n    this.players = [new Player({pos: [500,500], vel: [0,0]})]\n    this.bubbles = [\n        (new Bubble({\n            pos: [600,200],\n            vel: [2,2],\n            radius: 50,\n            game: game\n        }))\n    ]\n    this.rectangles = [new Rectangle({\n        pos: [0, 520],\n        vel: [0,0],\n        size: [1000, 2],\n        game: game\n    })];\n}\n\nmodule.exports = levelOne\n\n//# sourceURL=webpack:///./src/levels/level_one.js?");
 
 /***/ }),
 
@@ -181,7 +181,7 @@ eval("const Player = __webpack_require__(/*! ../objects/player */ \"./src/object
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("\n\nfunction Bubble(options) {\n    this.pos = options.pos;\n    this.vel = options.vel;\n    this.radius = options.radius;\n    this.color = \"#B22222\";\n}\n\nBubble.prototype.draw = function(ctx) {\n    ctx.fillStyle = this.color;\n    ctx.beginPath();\n    ctx.arc(\n        this.pos[0], this.pos[1], this.radius, 0, 2 * Math.PI, true \n    )\n    ctx.fill();\n}\n\nBubble.prototype.move = function() {\n    let newPos = [0,0];\n    newPos[0] = this.pos[0] + this.vel[0];\n    newPos[1] = this.pos[1] + this.vel[1];\n    this.pos = newPos;  \n}\n\n\nmodule.exports = Bubble;\n\n\n\n//# sourceURL=webpack:///./src/objects/bubble.js?");
+eval("\n\nfunction Bubble(options) {\n    this.pos = options.pos;\n    this.vel = options.vel;\n    this.radius = options.radius;\n    this.color = \"#B22222\";\n    this.accel =  0.5;\n}\n\nBubble.prototype.draw = function(ctx) {\n    ctx.fillStyle = this.color;\n    ctx.beginPath();\n    ctx.arc(\n        this.pos[0], this.pos[1], this.radius, 0, 2 * Math.PI, true \n    )\n    ctx.fill();\n}\n\nBubble.prototype.move = function() {\n    let newPos = [0,0];\n    newPos[0] = this.pos[0] + this.vel[0];\n    newPos[1] = this.pos[1] + this.vel[1];\n    this.vel[1] = this.vel[1] + this.accel;\n    this.pos = newPos;  \n}\n\n\nmodule.exports = Bubble;\n\n\n\n//# sourceURL=webpack:///./src/objects/bubble.js?");
 
 /***/ }),
 
