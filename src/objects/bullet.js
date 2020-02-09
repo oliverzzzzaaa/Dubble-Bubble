@@ -9,7 +9,7 @@ function Bullet(ctx, pos) {
 }
 
 Bullet.prototype.move = function() {
-    this.height += -15;
+    this.height += -8;
     this.top = this.pos[1] + this.height;
 }
 

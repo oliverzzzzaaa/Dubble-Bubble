@@ -8,17 +8,12 @@ function levelOne(game) {
     this.bubbles = [
         (new Bubble({
             pos: [600,200],
-            vel: [2,2],
-            radius: 50,
+            vel: [1,0.1],
+            radius: 60,
             game: game
         }))
     ]
-    this.rectangles = [new Rectangle({
-        pos: [0, 520],
-        vel: [0,0],
-        size: [1000, 2],
-        game: game
-    })];
+    this.rectangles = [];
 }
 
 module.exports = levelOne

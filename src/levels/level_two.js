@@ -7,16 +7,11 @@ function levelTwo(game) {
     this.bubbles = [
         (new Bubble({
             pos: [300,100],
-            vel: [5,5],
+            vel: [1,0.3],
             radius: 80
         }))
     ]
     this.rectangles = [new Rectangle({
-        pos: [0, 520],
-        vel: [0,0],
-        size: [1000, 2],
-        game: game
-    }), new Rectangle({
         pos: [300,300],
         vel: [0,0],
         size: [80, 10],

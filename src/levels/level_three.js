@@ -7,11 +7,11 @@ function levelThree(game) {
     this.bubbles = [
         (new Bubble({
             pos: [500,100],
-            vel: [5,5],
+            vel: [1,0.3],
             radius: 40,
         })), new Bubble({
             pos: [500, 200],
-            vel: [5,6],
+            vel: [1,0.3],
             radius: 40,
         })
     ]
@@ -22,11 +22,6 @@ function levelThree(game) {
     //     game: game
     // })];
     this.rectangles = [new Rectangle({
-        pos: [0, 520],
-        vel: [0,0],
-        size: [1000, 2],
-        game: game
-    }), new Rectangle({
         pos: [300,300],
         vel: [0,0],
         size: [80, 10],

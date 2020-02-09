@@ -25,7 +25,6 @@ Player.prototype.move = function() {
 
 Player.prototype.increaseVel = function(move) {
     this.vel = move;
-    console.log(this.vel)
 }
 
 
@@ -52,7 +51,6 @@ Player.prototype.shoot = function(ctx) {
 
 Player.prototype.clearBullet = function(i) {
     this.bullets.splice(i, 1);
-    console.log('clear')
 }
 
 module.exports = Player;

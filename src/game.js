@@ -2,19 +2,22 @@ const Bubble = require("./objects/bubble")
 const Player = require('./objects/player')
 const LevelReducer = require('./level_reducer')
 const isCollideRectangle = require("./collision")
+const floorBounce = require('./floor_bounce')
+const Ground = require("./objects/ground")
 
 function Game(ctx, width, height) {
     this.bubbles = [];
     this.bullets = [];
     this.players = [];
-    this.level = 1;
+    this.level = 2;
     this.rectangles = [];
     this.map = LevelReducer(this.level);
     this.DIM_X = width;
     this.DIM_Y = height;
     this.BG_COLOR = "#FFFFF";
     this.ctx = ctx;
-    this.floor = 520;
+    this.floorY = 520;
+    this.ground = new Ground();
 }
 
 Game.MOVES = {
@@ -86,6 +89,8 @@ Game.prototype.move = function(timeD) {
 
 Game.prototype.drawAll = function() {
     this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
+    // console.log(this.floor.prototype.draw)
+    this.ground.draw(this.ctx);
     this.players.forEach(player => {
         player.draw(this.ctx);       
         player.bullets.forEach(bullet => bullet.draw(this.ctx))
@@ -101,11 +106,11 @@ Game.prototype.shouldPop = function(bullet) {
         if (bullet.top <= bubble.pos[1] + bubble.radius && (bullet.pos[0] > bubble.pos[0] - bubble.radius && bullet.pos[0] < bubble.pos[0] + bubble.radius)) {
             let newBubbles = [new Bubble({
                 pos: bubble.pos.slice(),
-                vel: bubble.vel,
+                vel: [bubble.vel[0], bubble.vel[1] * 0.5],
                 radius: (bubble.radius / 2)
             }), new Bubble({
                 pos: bubble.pos.slice(),
-                vel: [(bubble.vel[0] * -1), bubble.vel[1]],
+                vel: [(bubble.vel[0] * -1), bubble.vel[1] * 0.5],
                 radius: (bubble.radius / 2)
             })]
             //two new bubbles in opposite X directions, half radius
@@ -137,8 +142,9 @@ Game.prototype.checkCollisions = function() {
     })
     //bubbles bouncing
     this.map.bubbles.forEach(bubble => {
-        if (bubble.pos[1] + bubble.radius >= this.floor) {
-            bubble.vel[1] = bubble.vel[1] * -1;
+        if (bubble.pos[1] + bubble.radius >= this.floorY) {
+            // bubble.vel[1] = bubble.vel[1] * -1;
+            bubble.vel[1] = floorBounce(bubble)
         }
         if (bubble.pos[0] + bubble.radius >= this.DIM_X) {
             bubble.vel[0] = bubble.vel[0] * -1;
@@ -152,11 +158,14 @@ Game.prototype.checkCollisions = function() {
         
     })
 
-    // this.map.bubbles.forEach(bubble => {
-    //     this.map.rectangles.forEach(rectangle => {
-    //         isCollideRectangle(bubble, rectangle)
-    //     })
-    // })
+    //rectangle collisions
+    this.map.bubbles.forEach(bubble => {
+        this.map.rectangles.forEach(rectangle => {
+            if (isCollideRectangle(bubble, rectangle)) {
+                bubble.vel[1] = bubble.vel[1] * -1;
+            }
+        })
+    })
 
     this.map.bubbles.forEach(bubble => {
         this.map.players.forEach(player => {
@@ -183,8 +192,8 @@ Game.prototype.onkeydown = function(e) {
     // if (e.key == 'w' || e.key == 'ArrowUp') { downKeys.up = true };
     // if (e.key == 's' || e.key == 'ArrowDown') { downKeys.down = true };
     if (e.key == 'a' || e.key == 'ArrowLeft') { 
-        this.map.players[0].vel = [-10, 0] };
-    if (e.key == 'd' || e.key == 'ArrowRight') { this.map.players[0].vel = [10, 0] };
+        this.map.players[0].vel = [-5, 0] };
+    if (e.key == 'd' || e.key == 'ArrowRight') { this.map.players[0].vel = [5, 0] };
 }
 
 Game.prototype.onkeyup = function(e) {
