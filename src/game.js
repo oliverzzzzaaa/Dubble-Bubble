@@ -203,9 +203,10 @@ Game.prototype.restartLevel = function(player) {
     this.map = new (LevelReducer(this.level))
     // ({players: this.players})
     console.log(this.map)
-    this.players.forEach(player => {
-        player.pos = this.map.startPos
-    })
+    // this.players.forEach(player => {
+    //     player.pos = this.map.startPos
+    // })
+    this.players = this.map.players;
     console.log(this.players)
     // this.bindKeyHandlers();
     this.bubbles = this.map.bubbles;
