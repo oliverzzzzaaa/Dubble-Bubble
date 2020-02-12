@@ -14,6 +14,7 @@ function levelOne(game) {
         }))
     ]
     this.rectangles = [];
+    this.startPos = [500, 500]
 }
 
 module.exports = levelOne

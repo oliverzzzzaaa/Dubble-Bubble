@@ -18,6 +18,7 @@ function Game(ctx, width, height) {
     this.ctx = ctx;
     this.floorY = 520;
     this.ground = new Ground();
+    this.playerOnelives = 5;
 }
 
 Game.MOVES = {
@@ -34,6 +35,7 @@ Game.prototype.bindKeyHandlers = function() {
         const move = Game.MOVES[k];
         key(k, function () {
             player.increaseVel(move)
+            console.log(k)
         })
     });
     key("space", () => { 
@@ -42,7 +44,6 @@ Game.prototype.bindKeyHandlers = function() {
             this.bullets.push(player.shoot(this.ctx));
         } else {
             console.log("too many")
-            console.log(player.bullets)
         }
     });
 }
@@ -58,7 +59,7 @@ Game.prototype.start = function() {
     this.lastTime = 0;
     this.map = new (LevelReducer(this.level))
     this.players = this.map.players;
-    // this.bindKeyHandlers();
+    this.bindKeyHandlers();
     this.bubbles = this.map.bubbles;
     requestAnimationFrame(this.animate.bind(this))
 }
@@ -70,10 +71,12 @@ Game.prototype.animate = function(time) {
     if (this.map.bubbles.length < 1) {
         console.log("DONE")
         this.level += 1;
-        this.map = new (LevelReducer(this.level))({players: this.players})
-        this.players.forEach(player => {
-            player.pos = this.map.startPos
-        })
+        this.map = new (LevelReducer(this.level))
+        // ({players: this.players})
+        this.players = this.map.players
+        // this.players.forEach(player => {
+        //     player.pos = this.map.startPos
+        // })
         this.bindKeyHandlers();
         this.bubbles = this.map.bubbles;
     }
@@ -99,6 +102,7 @@ Game.prototype.drawAll = function() {
     })
     this.map.bubbles.forEach(bubble => bubble.draw(this.ctx))
     this.map.rectangles.forEach(rectangle => rectangle.draw(this.ctx))
+    this.drawLives(this.ctx)
     this.checkCollisions();
 }
 
@@ -182,15 +186,30 @@ Game.prototype.checkCollisions = function() {
             let dX = Math.abs(bubble.pos[0] - player.pos[0])
             let dY = Math.abs(bubble.pos[1] - player.pos[1])
             if (dX * dX + dY * dY <= (player.radius + bubble.radius) * (player.radius + bubble.radius)) {
-                this.players.lives -=1;
-                // this.map = new (LevelReducer(this.level))({players: this.players})
-                // this.bubbles = this.map.bubbles;
-                // requestAnimationFrame(this.animate.bind(this));
-                alert("You lose! Fix dying")
+                this.players.forEach(player => player.clearBullet())
+                this.playerOnelives -=1;
+                if (this.playerOnelives > 0) {
+                    this.restartLevel(player)
+                } else {
+                    alert("you are out of lives")
+                }
             }
         })
     })
 
+}
+
+Game.prototype.restartLevel = function(player) {
+    this.map = new (LevelReducer(this.level))
+    // ({players: this.players})
+    console.log(this.map)
+    this.players.forEach(player => {
+        player.pos = this.map.startPos
+    })
+    console.log(this.players)
+    // this.bindKeyHandlers();
+    this.bubbles = this.map.bubbles;
+    return;
 }
 
 Game.prototype.onkeydown = function(e) {
@@ -216,6 +235,17 @@ Game.prototype.onkeyup = function(e) {
     // if (e.key == 's' || e.key == 'ArrowDown') {downKeys.down = false};
     if (e.key == 'a' || e.key == 'ArrowLeft') { this.map.players[0].vel = [0, 0] };
     if (e.key == 'd' || e.key == 'ArrowRight') { this.map.players[0].vel = [0, 0] };
+}
+
+Game.prototype.drawLives = function(ctx) {
+    ctx.fillStyle = this.color;
+    for (let i = 0; i < this.playerOnelives; i++) {
+        ctx.beginPath();
+        ctx.arc(
+            (50 + (i * 15)), 600, 10, 0, 2 * Math.PI, true 
+        )
+        ctx.fill();
+    }
 }
 
 

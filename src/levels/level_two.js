@@ -3,8 +3,8 @@ const Bubble = require("../objects/bubble")
 const Rectangle = require("../objects/rectangle")
 
 function levelTwo(options) {
-    // this.players = [new Player({pos: [500,500], vel: [0,0]})]
-    this.players = options.players
+    this.players = [new Player({pos: [500,500], vel: [0,0]})]
+    // this.players = options.players
     this.startPos = [[500,500]]
     this.bubbles = [
         (new Bubble({

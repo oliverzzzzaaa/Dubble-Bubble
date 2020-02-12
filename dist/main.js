@@ -1,1 +1,243 @@
-!function(t){var s={};function e(i){if(s[i])return s[i].exports;var o=s[i]={i:i,l:!1,exports:{}};return t[i].call(o.exports,o,o.exports,e),o.l=!0,o.exports}e.m=t,e.c=s,e.d=function(t,s,i){e.o(t,s)||Object.defineProperty(t,s,{enumerable:!0,get:i})},e.r=function(t){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0})},e.t=function(t,s){if(1&s&&(t=e(t)),8&s)return t;if(4&s&&"object"==typeof t&&t&&t.__esModule)return t;var i=Object.create(null);if(e.r(i),Object.defineProperty(i,"default",{enumerable:!0,value:t}),2&s&&"string"!=typeof t)for(var o in t)e.d(i,o,function(s){return t[s]}.bind(null,o));return i},e.n=function(t){var s=t&&t.__esModule?function(){return t.default}:function(){return t};return e.d(s,"a",s),s},e.o=function(t,s){return Object.prototype.hasOwnProperty.call(t,s)},e.p="",e(e.s=3)}([function(t,s){function e(t){this.pos=t.pos,this.vel=t.vel,this.radius=t.radius,this.color="#B22222",this.accel=.12}e.prototype.draw=function(t){t.fillStyle=this.color,t.beginPath(),t.arc(this.pos[0],this.pos[1],this.radius,0,2*Math.PI,!0),t.fill()},e.prototype.move=function(){let t=[0,0];this.vel[1]=this.vel[1]+this.accel,t[0]=this.pos[0]+this.vel[0],t[1]=this.pos[1]+this.vel[1],this.vel[1]=this.vel[1]+this.accel,this.pos=t},t.exports=e},function(t,s,e){const i=e(5);function o(t){this.pos=t.pos,this.vel=[0,0],this.bullets=[],this.radius=20,this.color="#6495ED",this.maxBullets=1,this.lives=t.lives}o.prototype.move=function(){let t=this.pos;return t[0]+=this.vel[0],t[0]>980?t[0]=980:t[0]<20&&(t[0]=20),t[1]+=this.vel[1],this.pos=t,t},o.prototype.increaseVel=function(t){this.vel=t},o.prototype.draw=function(t){t.fillStyle=this.color,t.beginPath(),t.arc(this.pos[0],this.pos[1],this.radius,0,2*Math.PI,!0),t.fill()},o.prototype.canShoot=function(){return this.bullets.length<this.maxBullets},o.prototype.shoot=function(t){if(this.bullets.length<this.maxBullets){let s=new i(t,this.pos.slice());return this.bullets.push(s),s}},o.prototype.clearBullet=function(t){this.bullets.splice(t,1)},t.exports=o},function(t,s){function e(t){this.width=t.size[0],this.height=t.size[1],this.pos=t.pos,this.color="#4B0082"}e.prototype.draw=function(t){t.fillStyle=this.color,t.fillRect(this.pos[0],this.pos[1],this.width,this.height)},t.exports=e},function(t,s,e){const i=e(4);e(13);document.addEventListener("DOMContentLoaded",t=>{let s=document.getElementById("game-canvas");s.width=1e3,s.height=700;const e=s.getContext("2d");new i(e,s.width,s.height).start()})},function(t,s,e){const i=e(0),o=(e(1),e(6)),l=e(10),n=e(11),h=e(12);function r(t,s,e){this.bubbles=[],this.bullets=[],this.players=[],this.level=1,this.rectangles=[],this.map=o(this.level),this.DIM_X=s,this.DIM_Y=e,this.BG_COLOR="#FFFFF",this.ctx=t,this.floorY=520,this.ground=new h}r.MOVES={w:[0,-15],a:[-15,0],s:[0,15],d:[15,0]},r.prototype.bindKeyHandlers=function(){const t=this.players[0];Object.keys(r.MOVES).forEach((function(s){const e=r.MOVES[s];key(s,(function(){t.increaseVel(e)}))})),key("space",()=>{t.canShoot()?(console.log("pew"),this.bullets.push(t.shoot(this.ctx))):(console.log("too many"),console.log(t.bullets))})},r.prototype.move=function(){this.bubbles.move()},r.prototype.start=function(){document.addEventListener("keydown",this.onkeydown.bind(this)),document.addEventListener("keyup",this.onkeyup.bind(this)),this.lastTime=0,this.map=new(o(this.level)),this.players=this.map.players,this.bubbles=this.map.bubbles,requestAnimationFrame(this.animate.bind(this))},r.prototype.animate=function(t){const s=t-this.lastTime;this.move(s),this.drawAll(),this.map.bubbles.length<1&&(console.log("DONE"),this.level+=1,this.map=new(o(this.level))({players:this.players}),this.players.forEach(t=>{t.pos=this.map.startPos}),this.bindKeyHandlers(),this.bubbles=this.map.bubbles),requestAnimationFrame(this.animate.bind(this))},r.prototype.move=function(t){this.map.players.forEach(t=>{t.move(),t.bullets.forEach(t=>t.move())}),this.map.bubbles.forEach(t=>t.move())},r.prototype.drawAll=function(){this.ctx.clearRect(0,0,this.DIM_X,this.DIM_Y),this.ground.draw(this.ctx),this.players.forEach(t=>{t.draw(this.ctx),t.bullets.forEach(t=>t.draw(this.ctx))}),this.map.bubbles.forEach(t=>t.draw(this.ctx)),this.map.rectangles.forEach(t=>t.draw(this.ctx)),this.checkCollisions()},r.prototype.shouldPop=function(t){for(let s=0;s<this.map.bubbles.length;s++){let e=this.map.bubbles[s];if(t.top<=e.pos[1]+e.radius&&t.pos[0]>e.pos[0]-e.radius&&t.pos[0]<e.pos[0]+e.radius){let t=[new i({pos:e.pos.slice(),vel:[e.vel[0],.5*e.vel[1]],radius:e.radius/2}),new i({pos:e.pos.slice(),vel:[-1*e.vel[0],.5*e.vel[1]],radius:e.radius/2})];return e.radius>10&&(this.map.bubbles=this.map.bubbles.concat(t)),this.map.bubbles.splice(s,1),!0}}},r.prototype.checkCollisions=function(){this.map.players.forEach(t=>{let s=0;for(;s<t.bullets.length;)t.bullets[s].top<0?t.clearBullet():this.shouldPop(t.bullets[s])?(t.clearBullet(),s++):s++}),this.map.bubbles.forEach(t=>{t.pos[1]+t.radius>=this.floorY&&(t.vel[1]=n(t)),t.pos[0]+t.radius>=this.DIM_X&&(t.vel[0]=-1*t.vel[0]),t.pos[1]-t.radius<=0&&(t.vel[1]=-1*t.vel[1]),t.pos[0]-t.radius<=0&&(t.vel[0]=-1*t.vel[0])}),this.map.bubbles.forEach(t=>{this.map.rectangles.forEach(s=>{let e=l(t,s);e&&("vertical"===e?t.vel[1]=-1*t.vel[1]:"horizontal"===e?t.vel[0]=-1*t.vel[0]:(t.vel[0]=-1*t.vel[0],t.vel[1]=-1*t.vel[1]))})}),this.map.bubbles.forEach(t=>{this.map.players.forEach(s=>{let e=Math.abs(t.pos[0]-s.pos[0]),i=Math.abs(t.pos[1]-s.pos[1]);e*e+i*i<=(s.radius+t.radius)*(s.radius+t.radius)&&(this.players.lives-=1,this.map=new(o(this.level))({players:this.players}),this.bubbles=this.map.bubbles,requestAnimationFrame(this.animate.bind(this)))})})},r.prototype.onkeydown=function(t){if(" "==t.key||"Enter"==t.key){let t=this.map.players[0];t.canShoot()?this.bullets.push(t.shoot(this.ctx)):(console.log("too many"),console.log(t.bullets))}"a"!=t.key&&"ArrowLeft"!=t.key||(this.map.players[0].vel=[-5,0]),"d"!=t.key&&"ArrowRight"!=t.key||(this.map.players[0].vel=[5,0])},r.prototype.onkeyup=function(t){"a"!=t.key&&"ArrowLeft"!=t.key||(this.map.players[0].vel=[0,0]),"d"!=t.key&&"ArrowRight"!=t.key||(this.map.players[0].vel=[0,0])},t.exports=r},function(t,s){function e(t,s){this.ctx=t,this.vel=[0,-2],this.pos=[s[0],s[1]+20],this.color="#FFF0F5",this.width=1,this.height=-100,this.top=this.pos}e.prototype.move=function(){this.height+=-8,this.top=this.pos[1]+this.height},e.prototype.draw=function(t){t.fillStyle=this.color,t.fillRect(this.pos[0],this.pos[1],this.width,this.height)},t.exports=e},function(t,s,e){const i=e(7),o=e(8),l=e(9);t.exports=function(t){switch(t){case 1:return i;case 2:return o;case 3:return l}}},function(t,s,e){const i=e(1),o=e(0);e(2);t.exports=function(t){this.players=[new i({pos:[500,500],vel:[0,0],lives:5})],this.bubbles=[new o({pos:[600,200],vel:[1,.1],radius:60,game:t})],this.rectangles=[]}},function(t,s,e){e(1);const i=e(0),o=e(2);t.exports=function(t){this.players=t.players,this.startPos=[[500,500]],this.bubbles=[new i({pos:[300,100],vel:[1,.3],radius:80})],this.rectangles=[new o({pos:[300,300],vel:[0,0],size:[80,10]}),new o({pos:[500,100],vel:[0,0],size:[10,200]})]}},function(t,s,e){const i=e(1),o=e(0),l=e(2);t.exports=function(t){this.players=[new i({pos:[500,500],vel:[0,0]})],this.bubbles=[new o({pos:[500,100],vel:[1,.3],radius:40}),new o({pos:[500,200],vel:[1,.3],radius:40})],this.rectangles=[new l({pos:[300,300],vel:[0,0],size:[80,10],game:t})]}},function(t,s){t.exports=function(t,s){let e=Math.abs(t.pos[0]-(s.pos[0]+s.width/2)),i=Math.abs(t.pos[1]-(s.pos[1]+s.height/2));if(e>s.width/2+t.radius)return!1;if(i>s.height/2+t.radius)return!1;if(e<=s.width/2)return"horizontal";if(i<=s.height/2)return"vertical";let o=e+s.width/2,l=i+s.height/2;return o*o+l*l<=t.radius*t.radius}},function(t,s){t.exports=function(t){return t.radius>=60?-11:t.radius>=30?-10:t.radius>=15?-9:t.radius>=7?-7:void 0}},function(t,s){function e(){this.color="#696969",this.pos=[0,520],this.width=1e3,this.height=2}e.prototype.draw=function(t){console.log(this),t.fillStyle=this.color,t.fillRect(this.pos[0],this.pos[1],this.width,this.height)},t.exports=e},function(t,s){function e(t,s){this.ctx=s,this.game=t}e.MOVES={w:[0,-10],a:[-10,0],s:[0,10],d:[10,0]},e.prototype.bindKeyHandlers=function(){const t=this.game.players[0];console.log(this.game),Object.keys(e.MOVES).forEach((function(s){const i=e.MOVES[s];key(s,(function(){t.increaseVel(i)}))})),key("space",(function(){ship.fireBullet()}))},e.prototype.start=function(){this.player=this.game.addPlayer(),this.bindKeyHandlers(),this.game.start()},t.exports=e}]);
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/index.js");
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./src/collision.js":
+/*!**************************!*\
+  !*** ./src/collision.js ***!
+  \**************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("\n\nfunction iscollideRectangle(circle, rectangle) {\n    // let dX = Math.abs(bubble.pos[0] - (rectangle.pos[0] - rectangle.width / 2));\n    // let dY = Math.abs(bubble.pos[1] - (rectangle.pos[1] - rectangle.height / 2));\n    // if (dX <= (rectangle.width / 2)) {\n    //     bubble.vel[0] = bubble.vel[0] * -1;\n    // }\n    // if (dY <= (rectangle.height / 2)) {\n    //     bubble.vel[1] = bubble.vel[1] * -1;\n    // }\n    // let cornerX = dX + (rectangle.width / 2);\n    // let cornerY = dY + (rectangle.height / 2);\n    // if (cornerX * cornerX + cornerY + cornerY <= bubble.radius * bubble.radius) {\n    //     bubble.vel[1] = bubble.vel[1] * -1;\n    //     bubble.vel[0] = bubble.vel[0] * -1;\n    // }\n\n    let distX = Math.abs(circle.pos[0] - (rectangle.pos[0] + rectangle.width / 2))\n    let distY = Math.abs(circle.pos[1] - (rectangle.pos[1] + rectangle.height / 2))\n    if (distX > (rectangle.width / 2) + circle.radius) {return false;}\n    if (distY > (rectangle.height / 2) + circle.radius) {return false;}\n\n    if (distX <= (rectangle.width / 2)) {return 'horizontal';}\n    if (distY <= (rectangle.height / 2)) {return 'vertical';}\n\n    let dx = distX + rectangle.width / 2;\n    let dy = distY + rectangle.height / 2;\n    return (dx * dx + dy * dy <= (circle.radius * circle.radius))\n\n}\n\n    \n\n\n\nmodule.exports = iscollideRectangle\n\n//# sourceURL=webpack:///./src/collision.js?");
+
+/***/ }),
+
+/***/ "./src/floor_bounce.js":
+/*!*****************************!*\
+  !*** ./src/floor_bounce.js ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("\n\nfunction floorBounce(bubble) {\n    if (bubble.radius >= 60) {\n        return -11;\n    } else if (bubble.radius >= 30) {\n        return -10;\n    } else if (bubble.radius >= 15) {\n        return -9;\n    } else if (bubble.radius >= 7) {\n        return -7;\n    }\n}\n\nmodule.exports = floorBounce;\n\n//# sourceURL=webpack:///./src/floor_bounce.js?");
+
+/***/ }),
+
+/***/ "./src/game.js":
+/*!*********************!*\
+  !*** ./src/game.js ***!
+  \*********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("const Bubble = __webpack_require__(/*! ./objects/bubble */ \"./src/objects/bubble.js\")\nconst Player = __webpack_require__(/*! ./objects/player */ \"./src/objects/player.js\")\nconst LevelReducer = __webpack_require__(/*! ./level_reducer */ \"./src/level_reducer.js\")\nconst isCollideRectangle = __webpack_require__(/*! ./collision */ \"./src/collision.js\")\nconst floorBounce = __webpack_require__(/*! ./floor_bounce */ \"./src/floor_bounce.js\")\nconst Ground = __webpack_require__(/*! ./objects/ground */ \"./src/objects/ground.js\")\n\nfunction Game(ctx, width, height) {\n    this.bubbles = [];\n    this.bullets = [];\n    this.players = [];\n    this.level = 1;\n    this.rectangles = [];\n    this.map = LevelReducer(this.level);\n    this.DIM_X = width;\n    this.DIM_Y = height;\n    this.BG_COLOR = \"#FFFFF\";\n    this.ctx = ctx;\n    this.floorY = 520;\n    this.ground = new Ground();\n    this.playerOnelives = 5;\n}\n\nGame.MOVES = {\n    w: [0, -15],\n    a: [-15, 0],\n    s: [0, 15],\n    d: [15, 0]\n};\n\n\nGame.prototype.bindKeyHandlers = function() {\n    const player = this.players[0]\n    Object.keys(Game.MOVES).forEach(function(k) {\n        const move = Game.MOVES[k];\n        key(k, function () {\n            player.increaseVel(move)\n            console.log(k)\n        })\n    });\n    key(\"space\", () => { \n        if (player.canShoot()) {\n            console.log('pew');\n            this.bullets.push(player.shoot(this.ctx));\n        } else {\n            console.log(\"too many\")\n        }\n    });\n}\n\nGame.prototype.move = function() {\n    this.bubbles.move()\n}\n\n\nGame.prototype.start = function() {\n    document.addEventListener('keydown', this.onkeydown.bind(this));\n    document.addEventListener('keyup', this.onkeyup.bind(this));\n    this.lastTime = 0;\n    this.map = new (LevelReducer(this.level))\n    this.players = this.map.players;\n    this.bindKeyHandlers();\n    this.bubbles = this.map.bubbles;\n    requestAnimationFrame(this.animate.bind(this))\n}\n\nGame.prototype.animate = function(time) {\n    const timeD = time - this.lastTime;\n    this.move(timeD);\n    this.drawAll();\n    if (this.map.bubbles.length < 1) {\n        console.log(\"DONE\")\n        this.level += 1;\n        this.map = new (LevelReducer(this.level))\n        // ({players: this.players})\n        this.players = this.map.players\n        // this.players.forEach(player => {\n        //     player.pos = this.map.startPos\n        // })\n        this.bindKeyHandlers();\n        this.bubbles = this.map.bubbles;\n    }\n    requestAnimationFrame(this.animate.bind(this));\n}\n\nGame.prototype.move = function(timeD) {\n    this.map.players.forEach(player => {\n        player.move()\n        player.bullets.forEach(bullet => bullet.move())\n    })\n    this.map.bubbles.forEach(bubble => bubble.move());\n}\n\n\nGame.prototype.drawAll = function() {\n    this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);\n    // console.log(this.floor.prototype.draw)\n    this.ground.draw(this.ctx);\n    this.players.forEach(player => {\n        player.draw(this.ctx);       \n        player.bullets.forEach(bullet => bullet.draw(this.ctx))\n    })\n    this.map.bubbles.forEach(bubble => bubble.draw(this.ctx))\n    this.map.rectangles.forEach(rectangle => rectangle.draw(this.ctx))\n    this.drawLives(this.ctx)\n    this.checkCollisions();\n}\n\nGame.prototype.shouldPop = function(bullet) {\n    for (let i = 0; i < this.map.bubbles.length; i++) {\n        let bubble = this.map.bubbles[i];\n        if (bullet.top <= bubble.pos[1] + bubble.radius && (bullet.pos[0] > bubble.pos[0] - bubble.radius && bullet.pos[0] < bubble.pos[0] + bubble.radius)) {\n            let newBubbles = [new Bubble({\n                pos: bubble.pos.slice(),\n                vel: [bubble.vel[0], bubble.vel[1] * 0.5],\n                radius: (bubble.radius / 2)\n            }), new Bubble({\n                pos: bubble.pos.slice(),\n                vel: [(bubble.vel[0] * -1), bubble.vel[1] * 0.5],\n                radius: (bubble.radius / 2)\n            })]\n            //two new bubbles in opposite X directions, half radius\n            if (bubble.radius > 10) {\n                this.map.bubbles = this.map.bubbles.concat(newBubbles)\n            }\n                this.map.bubbles.splice(i, 1);\n            return true\n        }\n    }\n}\n\nGame.prototype.checkCollisions = function() {\n\n    //clearing bullets at top\n    this.map.players.forEach(player => {\n        let i = 0;\n        while (i < player.bullets.length) {\n            if (player.bullets[i].top < 0) {\n                player.clearBullet()\n            } else if (this.shouldPop(player.bullets[i])) {\n                player.clearBullet()\n                i++;  \n            } else {\n                i++;\n            }\n        }\n\n    })\n    //bubbles bouncing\n    this.map.bubbles.forEach(bubble => {\n        if (bubble.pos[1] + bubble.radius >= this.floorY) {\n            // bubble.vel[1] = bubble.vel[1] * -1;\n            bubble.vel[1] = floorBounce(bubble)\n        }\n        if (bubble.pos[0] + bubble.radius >= this.DIM_X) {\n            bubble.vel[0] = bubble.vel[0] * -1;\n        }\n        if (bubble.pos[1] - bubble.radius <= 0) {\n            bubble.vel[1] = bubble.vel[1] * -1;\n        }\n        if (bubble.pos[0] - bubble.radius <= 0) {\n            bubble.vel[0] = bubble.vel[0] * -1;\n        }\n        \n    })\n\n    //rectangle collisions\n    this.map.bubbles.forEach(bubble => {\n        this.map.rectangles.forEach(rectangle => {\n            let collision = isCollideRectangle(bubble, rectangle)\n            if (collision) {\n                if (collision === 'vertical') {\n                    bubble.vel[1] = bubble.vel[1] * -1;\n                } else if (collision === 'horizontal') {\n                    bubble.vel[0] = bubble.vel[0] * -1;\n                } else {\n                    bubble.vel[0] = bubble.vel[0] * -1;\n                    bubble.vel[1] = bubble.vel[1] * -1;\n                }\n            }\n        })\n    })\n\n    this.map.bubbles.forEach(bubble => {\n        this.map.players.forEach(player => {\n            let dX = Math.abs(bubble.pos[0] - player.pos[0])\n            let dY = Math.abs(bubble.pos[1] - player.pos[1])\n            if (dX * dX + dY * dY <= (player.radius + bubble.radius) * (player.radius + bubble.radius)) {\n                this.players.forEach(player => player.clearBullet())\n                this.playerOnelives -=1;\n                if (this.playerOnelives > 0) {\n                    this.restartLevel(player)\n                } else {\n                    alert(\"you are out of lives\")\n                }\n            }\n        })\n    })\n\n}\n\nGame.prototype.restartLevel = function(player) {\n    this.map = new (LevelReducer(this.level))\n    // ({players: this.players})\n    console.log(this.map)\n    this.players.forEach(player => {\n        player.pos = this.map.startPos\n    })\n    console.log(this.players)\n    // this.bindKeyHandlers();\n    this.bubbles = this.map.bubbles;\n    return;\n}\n\nGame.prototype.onkeydown = function(e) {\n    if (e.key == ' ' || e.key == 'Enter') { \n        let player = this.map.players[0];\n        if (player.canShoot()) {\n            this.bullets.push(player.shoot(this.ctx));\n        } else {\n            console.log(\"too many\")\n            console.log(player.bullets)\n        }\n     };\n    // if (e.key == 'w' || e.key == 'ArrowUp') { downKeys.up = true };\n    // if (e.key == 's' || e.key == 'ArrowDown') { downKeys.down = true };\n    if (e.key == 'a' || e.key == 'ArrowLeft') { \n        this.map.players[0].vel = [-5, 0] };\n    if (e.key == 'd' || e.key == 'ArrowRight') { this.map.players[0].vel = [5, 0] };\n}\n\nGame.prototype.onkeyup = function(e) {\n    // if (e.key == ' ' || e.key == 'Enter') {downKeys.fire = false};\n    // if (e.key == 'w' || e.key == 'ArrowUp') {downKeys.up = false};\n    // if (e.key == 's' || e.key == 'ArrowDown') {downKeys.down = false};\n    if (e.key == 'a' || e.key == 'ArrowLeft') { this.map.players[0].vel = [0, 0] };\n    if (e.key == 'd' || e.key == 'ArrowRight') { this.map.players[0].vel = [0, 0] };\n}\n\nGame.prototype.drawLives = function(ctx) {\n    ctx.fillStyle = this.color;\n    for (let i = 0; i < this.playerOnelives; i++) {\n        ctx.beginPath();\n        ctx.arc(\n            (50 + (i * 15)), 600, 10, 0, 2 * Math.PI, true \n        )\n        ctx.fill();\n    }\n}\n\n\n// // hasListener = true;\n\nmodule.exports = Game;\n\n\n//webpack --watch --mode=development\n\n//# sourceURL=webpack:///./src/game.js?");
+
+/***/ }),
+
+/***/ "./src/gameview.js":
+/*!*************************!*\
+  !*** ./src/gameview.js ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("function GameView(game, ctx) {\n    this.ctx = ctx;\n    this.game = game;\n}\n\nGameView.MOVES = {\n    w: [0, -10],\n    a: [-10, 0],\n    s: [0, 10],\n    d: [10, 0]\n};\n\nGameView.prototype.bindKeyHandlers = function bindKeyHandlers() {\n    const player = this.game.players[0]\n    console.log(this.game)\n    Object.keys(GameView.MOVES).forEach(function(k) {\n        const move = GameView.MOVES[k];\n        key(k, function () {\n            player.increaseVel(move)\n        })\n    });\n    key(\"space\", function () { ship.fireBullet(); });\n}\n\nGameView.prototype.start = function() {\n    this.player = this.game.addPlayer();\n    this.bindKeyHandlers()\n    this.game.start();\n    \n}\n\n// GameView.prototype.playRound = function() {\n//     let interval = setInterval(() => {\n//         this.game.draw(this.ctx)\n//     }, 10)\n// }\n\n// GameView.prototype.animate = function animate(time) {\n//     const timeDelta = time - this.lastTime;\n  \n//     this.game.step(timeDelta);\n//     this.game.draw(this.ctx);\n//     this.lastTime = time;\n  \n//     // every call to animate requests causes another call to animate\n//     requestAnimationFrame(this.animate.bind(this));\n// };\n\n\nmodule.exports = GameView;\n\n//# sourceURL=webpack:///./src/gameview.js?");
+
+/***/ }),
+
+/***/ "./src/index.js":
+/*!**********************!*\
+  !*** ./src/index.js ***!
+  \**********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("const Game = __webpack_require__(/*! ./game */ \"./src/game.js\")\nconst GameView = __webpack_require__(/*! ./gameview */ \"./src/gameview.js\")\n\ndocument.addEventListener(\"DOMContentLoaded\", e => {\n    let canvas = document.getElementById(\"game-canvas\")\n    canvas.width = 1000;\n    // canvas.width = canvas.parentElement.clientWidth;\n    canvas.height = 700;\n    // canvas.height = canvas.parentElement.clientHeight;\n    // console.log(canvas.parentElement.clientWidth)\n    // console.log(canvas.parentElement.clientHeight)\n    const ctx = canvas.getContext('2d');\n    const game = new Game(ctx, canvas.width, canvas.height);\n    // let a = new GameView(game, ctx)\n    game.start();\n})\n\n//# sourceURL=webpack:///./src/index.js?");
+
+/***/ }),
+
+/***/ "./src/level_reducer.js":
+/*!******************************!*\
+  !*** ./src/level_reducer.js ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("const levelOne = __webpack_require__(/*! ./levels/level_one */ \"./src/levels/level_one.js\")\nconst levelTwo = __webpack_require__(/*! ./levels/level_two */ \"./src/levels/level_two.js\")\nconst levelThree = __webpack_require__(/*! ./levels/level_three */ \"./src/levels/level_three.js\");\n\nfunction LevelReducer(level) {\n    switch (level) {\n        case 1:\n            return levelOne;\n        case 2:\n            return levelTwo;\n        case 3: \n            return levelThree;\n        default:\n            levelOne;\n    }\n}\n\nmodule.exports = LevelReducer;\n\n//# sourceURL=webpack:///./src/level_reducer.js?");
+
+/***/ }),
+
+/***/ "./src/levels/level_one.js":
+/*!*********************************!*\
+  !*** ./src/levels/level_one.js ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("\nconst Player = __webpack_require__(/*! ../objects/player */ \"./src/objects/player.js\")\nconst Bubble = __webpack_require__(/*! ../objects/bubble */ \"./src/objects/bubble.js\")\nconst Rectangle = __webpack_require__(/*! ../objects/rectangle */ \"./src/objects/rectangle.js\")\n\nfunction levelOne(game) {\n    this.players = [new Player({pos: [500,500], vel: [0,0], lives: 5})]\n    this.bubbles = [\n        (new Bubble({\n            pos: [600,200],\n            vel: [1,0.1],\n            radius: 60,\n            game: game\n        }))\n    ]\n    this.rectangles = [];\n    this.startPos = [500, 500]\n}\n\nmodule.exports = levelOne\n\n//# sourceURL=webpack:///./src/levels/level_one.js?");
+
+/***/ }),
+
+/***/ "./src/levels/level_three.js":
+/*!***********************************!*\
+  !*** ./src/levels/level_three.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("const Player = __webpack_require__(/*! ../objects/player */ \"./src/objects/player.js\")\nconst Bubble = __webpack_require__(/*! ../objects/bubble */ \"./src/objects/bubble.js\")\nconst Rectangle = __webpack_require__(/*! ../objects/rectangle */ \"./src/objects/rectangle.js\")\n\nfunction levelThree(game) {\n    this.players = [new Player({pos: [500,500], vel: [0,0]})]\n    this.bubbles = [\n        (new Bubble({\n            pos: [500,100],\n            vel: [1,0.3],\n            radius: 40,\n        })), new Bubble({\n            pos: [500, 200],\n            vel: [1,0.3],\n            radius: 40,\n        })\n    ]\n    // this.rectangles = [ new Rectangle({\n    //     pos: [300,300],\n    //     vel: [0,0],\n    //     size: [80, 10],\n    //     game: game\n    // })];\n    this.rectangles = [new Rectangle({\n        pos: [300,300],\n        vel: [0,0],\n        size: [80, 10],\n        game: game\n    })];\n}\n\nmodule.exports = levelThree\n\n//# sourceURL=webpack:///./src/levels/level_three.js?");
+
+/***/ }),
+
+/***/ "./src/levels/level_two.js":
+/*!*********************************!*\
+  !*** ./src/levels/level_two.js ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("const Player = __webpack_require__(/*! ../objects/player */ \"./src/objects/player.js\")\nconst Bubble = __webpack_require__(/*! ../objects/bubble */ \"./src/objects/bubble.js\")\nconst Rectangle = __webpack_require__(/*! ../objects/rectangle */ \"./src/objects/rectangle.js\")\n\nfunction levelTwo(options) {\n    this.players = [new Player({pos: [500,500], vel: [0,0]})]\n    // this.players = options.players\n    this.startPos = [[500,500]]\n    this.bubbles = [\n        (new Bubble({\n            pos: [300,100],\n            vel: [1,0.3],\n            radius: 80\n        }))\n    ]\n    this.rectangles = [new Rectangle({\n        pos: [300,300],\n        vel: [0,0],\n        size: [80, 10]\n    }), new Rectangle({\n        pos: [500, 100],\n        vel: [0,0],\n        size: [10, 200]\n    })];\n}\n\nmodule.exports = levelTwo\n\n//# sourceURL=webpack:///./src/levels/level_two.js?");
+
+/***/ }),
+
+/***/ "./src/objects/bubble.js":
+/*!*******************************!*\
+  !*** ./src/objects/bubble.js ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("\n\nfunction Bubble(options) {\n    this.pos = options.pos;\n    this.vel = options.vel;\n    this.radius = options.radius;\n    this.color = \"#B22222\";\n    this.accel =  0.12;\n    // this.maxVelY = this.radius / 3;\n}\n\nBubble.prototype.draw = function(ctx) {\n    ctx.fillStyle = this.color;\n    ctx.beginPath();\n    ctx.arc(\n        this.pos[0], this.pos[1], this.radius, 0, 2 * Math.PI, true \n    )\n    ctx.fill();\n}\n\nBubble.prototype.move = function() {\n    let newPos = [0,0];\n    this.vel[1] = this.vel[1] + this.accel;\n    \n    newPos[0] = this.pos[0] + this.vel[0];\n    newPos[1] = this.pos[1] + this.vel[1];\n    this.vel[1] = this.vel[1] + this.accel;\n    // if (this.vel[1] > this.maxVelY) {\n    //     this.vel[1] = this.maxVelY;\n    // }\n    this.pos = newPos;  \n}\n\n\nmodule.exports = Bubble;\n\n\n\n//# sourceURL=webpack:///./src/objects/bubble.js?");
+
+/***/ }),
+
+/***/ "./src/objects/bullet.js":
+/*!*******************************!*\
+  !*** ./src/objects/bullet.js ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("function Bullet(ctx, pos) {\n    this.ctx = ctx;\n    this.vel = [0,-2];\n    this.pos = [pos[0], pos[1]+20];\n    this.color = '#FFF0F5'\n    this.width = 1;\n    this.height = -100;\n    this.top = this.pos;\n}\n\nBullet.prototype.move = function() {\n    this.height += -8;\n    this.top = this.pos[1] + this.height;\n}\n\nBullet.prototype.draw = function(ctx) {\n    ctx.fillStyle = this.color;\n    ctx.fillRect(this.pos[0], this.pos[1], this.width, this.height)\n}\n\nmodule.exports = Bullet;\n\n//# sourceURL=webpack:///./src/objects/bullet.js?");
+
+/***/ }),
+
+/***/ "./src/objects/ground.js":
+/*!*******************************!*\
+  !*** ./src/objects/ground.js ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("function Ground() {\n    this.color = \"#696969\";\n    this.pos = [0, 520];\n    // this.size = [1000, 2];\n    this.width = 1000;\n    this.height = 2;\n}\n\nGround.prototype.draw = function(ctx) {\n    ctx.fillStyle = this.color;\n    ctx.fillRect(this.pos[0], this.pos[1], this.width, this.height)\n}\n\nmodule.exports = Ground;\n\n//# sourceURL=webpack:///./src/objects/ground.js?");
+
+/***/ }),
+
+/***/ "./src/objects/player.js":
+/*!*******************************!*\
+  !*** ./src/objects/player.js ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("const Bullet = __webpack_require__(/*! ./bullet */ \"./src/objects/bullet.js\")\n\nfunction Player(options) {\n    this.pos = options.pos;\n    this.vel = [0,0];\n    this.bullets = [];\n    this.radius = 20;\n    this.color = '#6495ED'\n    this.maxBullets = 1;\n    this.lives = options.lives;\n}\n\nPlayer.prototype.move = function() {\n    let newPos = this.pos;\n    newPos[0] += this.vel[0];\n    if (newPos[0] > 980) {\n        newPos[0] = 980;\n    } else if (newPos[0] < 20){\n        newPos[0] = 20;\n    }\n    newPos[1] += this.vel[1];\n    // this.vel = [0,0];\n    this.pos = newPos;\n    return newPos;\n}\n\nPlayer.prototype.increaseVel = function(move) {\n    this.vel = move;\n}\n\n\nPlayer.prototype.draw = function(ctx) {\n    ctx.fillStyle = this.color;\n    ctx.beginPath();\n    ctx.arc(\n        this.pos[0], this.pos[1], this.radius, 0, 2 * Math.PI, true \n    )\n    ctx.fill();\n}\n\nPlayer.prototype.canShoot = function() {\n    return (this.bullets.length < this.maxBullets);\n}\n\nPlayer.prototype.shoot = function(ctx) {\n    if (this.bullets.length < this.maxBullets) {\n        let bullet = new Bullet(ctx, this.pos.slice());\n        this.bullets.push(bullet)\n        return bullet;\n    }\n}\n\nPlayer.prototype.clearBullet = function(i) {\n    this.bullets.splice(i, 1);\n}\n\nmodule.exports = Player;\n\n\n\n\n\n//# sourceURL=webpack:///./src/objects/player.js?");
+
+/***/ }),
+
+/***/ "./src/objects/rectangle.js":
+/*!**********************************!*\
+  !*** ./src/objects/rectangle.js ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("function Rectangle(options) {\n    this.width = options.size[0];\n    this.height = options.size[1];\n    this.pos = options.pos;\n    this.color = '#4B0082'\n}\n\nRectangle.prototype.draw = function(ctx) {\n    ctx.fillStyle = this.color;\n    ctx.fillRect(this.pos[0], this.pos[1], this.width, this.height)\n    \n}\n\nmodule.exports = Rectangle;\n\n\n//# sourceURL=webpack:///./src/objects/rectangle.js?");
+
+/***/ })
+
+/******/ });
