@@ -183,9 +183,10 @@ Game.prototype.checkCollisions = function() {
             let dY = Math.abs(bubble.pos[1] - player.pos[1])
             if (dX * dX + dY * dY <= (player.radius + bubble.radius) * (player.radius + bubble.radius)) {
                 this.players.lives -=1;
-                this.map = new (LevelReducer(this.level))({players: this.players})
-                this.bubbles = this.map.bubbles;
-                requestAnimationFrame(this.animate.bind(this));
+                // this.map = new (LevelReducer(this.level))({players: this.players})
+                // this.bubbles = this.map.bubbles;
+                // requestAnimationFrame(this.animate.bind(this));
+                alert("You lose! Fix dying")
             }
         })
     })
