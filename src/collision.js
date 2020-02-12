@@ -21,8 +21,8 @@ function iscollideRectangle(circle, rectangle) {
     if (distX > (rectangle.width / 2) + circle.radius) {return false;}
     if (distY > (rectangle.height / 2) + circle.radius) {return false;}
 
-    if (distX <= (rectangle.width / 2)) {return true;}
-    if (distY <= (rectangle.height / 2)) {return true;}
+    if (distX <= (rectangle.width / 2)) {return 'horizontal';}
+    if (distY <= (rectangle.height / 2)) {return 'vertical';}
 
     let dx = distX + rectangle.width / 2;
     let dy = distY + rectangle.height / 2;

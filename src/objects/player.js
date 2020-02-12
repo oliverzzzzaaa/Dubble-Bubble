@@ -7,6 +7,7 @@ function Player(options) {
     this.radius = 20;
     this.color = '#6495ED'
     this.maxBullets = 1;
+    this.lives = options.lives;
 }
 
 Player.prototype.move = function() {

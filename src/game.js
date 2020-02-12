@@ -9,7 +9,7 @@ function Game(ctx, width, height) {
     this.bubbles = [];
     this.bullets = [];
     this.players = [];
-    this.level = 2;
+    this.level = 1;
     this.rectangles = [];
     this.map = LevelReducer(this.level);
     this.DIM_X = width;
@@ -70,8 +70,10 @@ Game.prototype.animate = function(time) {
     if (this.map.bubbles.length < 1) {
         console.log("DONE")
         this.level += 1;
-        this.map = new (LevelReducer(this.level))
-        this.players = this.map.players;
+        this.map = new (LevelReducer(this.level))({players: this.players})
+        this.players.forEach(player => {
+            player.pos = this.map.startPos
+        })
         this.bindKeyHandlers();
         this.bubbles = this.map.bubbles;
     }
@@ -161,8 +163,16 @@ Game.prototype.checkCollisions = function() {
     //rectangle collisions
     this.map.bubbles.forEach(bubble => {
         this.map.rectangles.forEach(rectangle => {
-            if (isCollideRectangle(bubble, rectangle)) {
-                bubble.vel[1] = bubble.vel[1] * -1;
+            let collision = isCollideRectangle(bubble, rectangle)
+            if (collision) {
+                if (collision === 'vertical') {
+                    bubble.vel[1] = bubble.vel[1] * -1;
+                } else if (collision === 'horizontal') {
+                    bubble.vel[0] = bubble.vel[0] * -1;
+                } else {
+                    bubble.vel[0] = bubble.vel[0] * -1;
+                    bubble.vel[1] = bubble.vel[1] * -1;
+                }
             }
         })
     })
@@ -172,7 +182,10 @@ Game.prototype.checkCollisions = function() {
             let dX = Math.abs(bubble.pos[0] - player.pos[0])
             let dY = Math.abs(bubble.pos[1] - player.pos[1])
             if (dX * dX + dY * dY <= (player.radius + bubble.radius) * (player.radius + bubble.radius)) {
-                alert("You lose!")
+                this.players.lives -=1;
+                this.map = new (LevelReducer(this.level))({players: this.players})
+                this.bubbles = this.map.bubbles;
+                requestAnimationFrame(this.animate.bind(this));
             }
         })
     })
@@ -208,3 +221,6 @@ Game.prototype.onkeyup = function(e) {
 // // hasListener = true;
 
 module.exports = Game;
+
+
+//webpack --watch --mode=development
