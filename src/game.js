@@ -165,21 +165,21 @@ Game.prototype.checkCollisions = function() {
     })
 
     //rectangle collisions
-    this.map.bubbles.forEach(bubble => {
-        this.map.rectangles.forEach(rectangle => {
-            let collision = isCollideRectangle(bubble, rectangle)
-            if (collision) {
-                if (collision === 'vertical') {
-                    bubble.vel[1] = bubble.vel[1] * -1;
-                } else if (collision === 'horizontal') {
-                    bubble.vel[0] = bubble.vel[0] * -1;
-                } else {
-                    bubble.vel[0] = bubble.vel[0] * -1;
-                    bubble.vel[1] = bubble.vel[1] * -1;
-                }
-            }
-        })
-    })
+    // this.map.bubbles.forEach(bubble => {
+    //     this.map.rectangles.forEach(rectangle => {
+    //         let collision = isCollideRectangle(bubble, rectangle)
+    //         if (collision) {
+    //             if (collision === 'vertical') {
+    //                 bubble.vel[1] = bubble.vel[1] * -1;
+    //             } else if (collision === 'horizontal') {
+    //                 bubble.vel[0] = bubble.vel[0] * -1;
+    //             } else {
+    //                 bubble.vel[0] = bubble.vel[0] * -1;
+    //                 bubble.vel[1] = bubble.vel[1] * -1;
+    //             }
+    //         }
+    //     })
+    // })
 
     this.map.bubbles.forEach(bubble => {
         this.map.players.forEach(player => {
@@ -239,14 +239,17 @@ Game.prototype.onkeyup = function(e) {
 }
 
 Game.prototype.drawLives = function(ctx) {
-    ctx.fillStyle = this.color;
+    ctx.font = "24px Arial";
+    ctx.fillText(`Lives remaining: `, 50, 550)
+    ctx.fillStyle = '#6495ED';
     for (let i = 0; i < this.playerOnelives; i++) {
         ctx.beginPath();
         ctx.arc(
-            (50 + (i * 15)), 600, 10, 0, 2 * Math.PI, true 
+            (50 + (i * 20)), 600, 10, 0, 2 * Math.PI, true 
         )
         ctx.fill();
     }
+    
 }
 
 
