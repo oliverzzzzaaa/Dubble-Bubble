@@ -21,12 +21,13 @@ function levelThree(game) {
     //     size: [80, 10],
     //     game: game
     // })];
-    this.rectangles = [new Rectangle({
-        pos: [300,300],
-        vel: [0,0],
-        size: [80, 10],
-        game: game
-    })];
+    // this.rectangles = [new Rectangle({
+    //     pos: [300,300],
+    //     vel: [0,0],
+    //     size: [80, 10],
+    //     game: game
+    // })];
+    this.rectangles = [];
 }
 
 module.exports = levelThree

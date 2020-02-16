@@ -9,7 +9,7 @@ function Game(ctx, width, height) {
     this.bubbles = [];
     this.bullets = [];
     this.players = [];
-    this.level = 1;
+    this.level = 4;
     this.rectangles = [];
     this.map = LevelReducer(this.level);
     this.DIM_X = width;
