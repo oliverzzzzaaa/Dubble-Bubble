@@ -19,6 +19,7 @@ function Game(ctx, width, height) {
     this.floorY = 520;
     this.ground = new Ground();
     this.playerOnelives = 5;
+    this.paused = true;
 }
 
 Game.MOVES = {
@@ -46,6 +47,9 @@ Game.prototype.bindKeyHandlers = function() {
             console.log("too many")
         }
     });
+    key("p", () => {
+        this.paused = !this.paused
+    })
 }
 
 Game.prototype.move = function() {
@@ -61,13 +65,16 @@ Game.prototype.start = function() {
     this.players = this.map.players;
     this.bindKeyHandlers();
     this.bubbles = this.map.bubbles;
+    setTimeout(() => {
+        this.paused = false}, 1000)
     requestAnimationFrame(this.animate.bind(this))
 }
 
 Game.prototype.animate = function(time) {
     const timeD = time - this.lastTime;
-    this.move(timeD);
     this.drawAll();
+    if (this.paused === false) {
+    this.move(timeD);
     if (this.map.bubbles.length < 1) {
         console.log("DONE")
         this.level += 1;
@@ -79,8 +86,9 @@ Game.prototype.animate = function(time) {
         // })
         this.bindKeyHandlers();
         this.bubbles = this.map.bubbles;
+        }
     }
-    requestAnimationFrame(this.animate.bind(this));
+requestAnimationFrame(this.animate.bind(this));
 }
 
 Game.prototype.move = function(timeD) {

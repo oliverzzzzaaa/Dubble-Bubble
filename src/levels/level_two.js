@@ -13,15 +13,16 @@ function levelTwo(options) {
             radius: 80
         }))
     ]
-    this.rectangles = [new Rectangle({
-        pos: [300,300],
-        vel: [0,0],
-        size: [80, 10]
-    }), new Rectangle({
-        pos: [500, 100],
-        vel: [0,0],
-        size: [10, 200]
-    })];
+    // this.rectangles = [new Rectangle({
+    //     pos: [300,300],
+    //     vel: [0,0],
+    //     size: [80, 10]
+    // }), new Rectangle({
+    //     pos: [500, 100],
+    //     vel: [0,0],
+    //     size: [10, 200]
+    // })];
+    this.rectangles = [];
 }
 
 module.exports = levelTwo
