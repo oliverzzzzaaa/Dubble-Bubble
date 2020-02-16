@@ -9,7 +9,7 @@ function Game(ctx, width, height) {
     this.bubbles = [];
     this.bullets = [];
     this.players = [];
-    this.level = 4;
+    this.level = 1;
     this.rectangles = [];
     this.map = LevelReducer(this.level);
     this.DIM_X = width;
@@ -107,8 +107,8 @@ Game.prototype.drawAll = function() {
     // console.log(this.floor.prototype.draw)
     this.ground.draw(this.ctx);
     this.players.forEach(player => {
-        player.draw(this.ctx);       
         player.bullets.forEach(bullet => bullet.draw(this.ctx))
+        player.draw(this.ctx);       
     })
     this.map.bubbles.forEach(bubble => bubble.draw(this.ctx))
     this.map.rectangles.forEach(rectangle => rectangle.draw(this.ctx))
