@@ -17,3 +17,12 @@
 #main-body {
     background-color: black;
 }
+
+.instructions-div {
+    position: absolute;
+    height: 80%;
+    width: 10%;
+    border: 1px solid white;
+    color: white;
+    font-size: 10px;
+}
