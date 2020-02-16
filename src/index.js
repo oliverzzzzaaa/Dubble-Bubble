@@ -10,8 +10,16 @@ document.addEventListener("DOMContentLoaded", e => {
     // console.log(canvas.parentElement.clientWidth)
     // console.log(canvas.parentElement.clientHeight)
     const ctx = canvas.getContext('2d');
-    const game = new Game(ctx, canvas.width, canvas.height);
+    let game = new Game(ctx, canvas.width, canvas.height);
     // let a = new GameView(game, ctx)
+    // while (true) {
     game.start();
-    
+    // }
+    let intervalId = setInterval(() => {
+        if (game.isOver) {
+            alert("You lose!")
+            game = new Game(ctx, canvas.width, canvas.height);
+            game.start();
+        }
+    }, 2000)
 })

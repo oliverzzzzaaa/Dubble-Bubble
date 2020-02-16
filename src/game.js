@@ -20,6 +20,7 @@ function Game(ctx, width, height) {
     this.ground = new Ground();
     this.playerOnelives = 5;
     this.paused = true;
+    this.isOver = false;
 }
 
 Game.MOVES = {
@@ -71,24 +72,25 @@ Game.prototype.start = function() {
 }
 
 Game.prototype.animate = function(time) {
+    if (this.isOver) {return null}
     const timeD = time - this.lastTime;
     this.drawAll();
     if (this.paused === false) {
-    this.move(timeD);
-    if (this.map.bubbles.length < 1) {
-        console.log("DONE")
-        this.level += 1;
-        this.map = new (LevelReducer(this.level))
-        // ({players: this.players})
-        this.players = this.map.players
-        // this.players.forEach(player => {
-        //     player.pos = this.map.startPos
-        // })
-        this.bindKeyHandlers();
-        this.bubbles = this.map.bubbles;
+        this.move(timeD);
+        if (this.map.bubbles.length < 1) {
+            console.log("DONE")
+            this.level += 1;
+            this.map = new (LevelReducer(this.level))
+            // ({players: this.players})
+            this.players = this.map.players
+            // this.players.forEach(player => {
+            //     player.pos = this.map.startPos
+            // })
+            this.bindKeyHandlers();
+            this.bubbles = this.map.bubbles;
         }
     }
-requestAnimationFrame(this.animate.bind(this));
+    requestAnimationFrame(this.animate.bind(this));
 }
 
 Game.prototype.move = function(timeD) {
@@ -111,6 +113,7 @@ Game.prototype.drawAll = function() {
     this.map.bubbles.forEach(bubble => bubble.draw(this.ctx))
     this.map.rectangles.forEach(rectangle => rectangle.draw(this.ctx))
     this.drawLives(this.ctx)
+    this.drawLevel(this.ctx)
     this.checkCollisions();
 }
 
@@ -199,7 +202,7 @@ Game.prototype.checkCollisions = function() {
                 if (this.playerOnelives > 0) {
                     this.restartLevel(player)
                 } else {
-                    alert("you are out of lives")
+                    this.isOver = true
                 }
             }
         })
@@ -258,6 +261,12 @@ Game.prototype.drawLives = function(ctx) {
         ctx.fill();
     }
     
+}
+
+Game.prototype.drawLevel = function(ctx) {
+    ctx.font = "24px Arial";
+    let level = `Level: ${this.level}`
+    ctx.fillText(level, 500, 550)
 }
 
 
