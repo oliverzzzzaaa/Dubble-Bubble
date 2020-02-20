@@ -29,5 +29,55 @@ Some Features:
 ## ***Code Snippets:***
 
 
+Single Player death: 
+
+```
+ this.map.bubbles.forEach(bubble => {
+        this.map.players.forEach(player => {
+            let dX = Math.abs(bubble.pos[0] - player.pos[0])
+            let dY = Math.abs(bubble.pos[1] - player.pos[1])
+            if (dX * dX + dY * dY <= (player.radius + bubble.radius) * (player.radius + bubble.radius)) {
+                this.players.forEach(player => player.clearBullet())
+                this.playerOnelives -=1;
+                if (this.playerOnelives > 0) {
+                    this.restartLevel(player)
+                } else {
+                    this.isOver = true
+                }
+            }
+        })
+    })
+ ```
+ 
+ Bubble Pop:
+ 
+ ```
+ Game.prototype.shouldPop = function(bullet) {
+    for (let i = 0; i < this.map.bubbles.length; i++) {
+        let bubble = this.map.bubbles[i];
+        if (bullet.top <= bubble.pos[1] + bubble.radius && (bullet.pos[0] > bubble.pos[0] - 
+             bubble.radius && bullet.pos[0] < bubble.pos[0] + bubble.radius)) {
+            let newBubbles = [new Bubble({
+                pos: bubble.pos.slice(),
+                vel: [bubble.vel[0], bubble.vel[1] * 0.5],
+                radius: (bubble.radius / 2)
+            }), new Bubble({
+                pos: bubble.pos.slice(),
+                vel: [(bubble.vel[0] * -1), bubble.vel[1] * 0.5],
+                radius: (bubble.radius / 2)
+            })]
+            //two new bubbles in opposite X directions, half radius
+            if (bubble.radius > 10) {
+                this.map.bubbles = this.map.bubbles.concat(newBubbles)
+            }
+                this.map.bubbles.splice(i, 1);
+            return true
+        }
+    }
+}
+ 
+ ```
+
+
 
 Screenshots:
