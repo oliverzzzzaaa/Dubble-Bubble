@@ -94,11 +94,13 @@ Game.prototype.animate = function(time) {
 }
 
 Game.prototype.move = function(timeD) {
+    this.checkCollisions();
     this.map.players.forEach(player => {
         player.move()
         player.bullets.forEach(bullet => bullet.move())
     })
     this.map.bubbles.forEach(bubble => bubble.move());
+    this.checkCollisions();
 }
 
 
@@ -162,15 +164,19 @@ Game.prototype.checkCollisions = function() {
         if (bubble.pos[1] + bubble.radius >= this.floorY) {
             // bubble.vel[1] = bubble.vel[1] * -1;
             bubble.vel[1] = floorBounce(bubble)
+            bubble.move()
         }
         if (bubble.pos[0] + bubble.radius >= this.DIM_X) {
             bubble.vel[0] = bubble.vel[0] * -1;
+            bubble.move()
         }
         if (bubble.pos[1] - bubble.radius <= 0) {
             bubble.vel[1] = bubble.vel[1] * -1;
+            bubble.move()
         }
         if (bubble.pos[0] - bubble.radius <= 0) {
             bubble.vel[0] = bubble.vel[0] * -1;
+            bubble.move()
         }
         
     })
