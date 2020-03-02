@@ -78,8 +78,12 @@ Game.prototype.animate = function(time) {
     if (this.paused === false) {
         this.move(timeD);
         if (this.map.bubbles.length < 1) {
-            console.log("DONE")
             this.level += 1;
+            if (this.level > 5) {
+                alert("Congratulations! You have won!")
+                this.level = 1;
+                this.playerOnelives = 5;
+            }
             this.map = new (LevelReducer(this.level))
             // ({players: this.players})
             this.players = this.map.players
